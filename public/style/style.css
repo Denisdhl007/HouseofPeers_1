@@ -181,7 +181,7 @@ button {
 }
 
 .platform-grid {
-    grid-template-columns: repeat(auto-fit, minmax(32rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(50rem, 1fr));
 }
 
 .footer-grid {
@@ -293,9 +293,9 @@ p {
 
 .section-description {
     text-align: center;
-    max-width: 64rem;
     color: var(--color-text-secondary);
     font-size: 1.8rem;
+    padding: 0 10rem;
 }
 
 @media screen and (max-width: 768px) {
