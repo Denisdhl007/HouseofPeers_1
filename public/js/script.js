@@ -672,6 +672,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+
+
 /**
  * Accordion functionality
  */

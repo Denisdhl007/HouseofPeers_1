@@ -7,6 +7,12 @@ HouseofPeers_1
    ├─ .DS_Store
    ├─ assets
    │  ├─ .DS_Store
+   │  ├─ categories
+   │  │  ├─ building.gif
+   │  │  ├─ money.gif
+   │  │  ├─ more.gif
+   │  │  ├─ overpopulation.gif
+   │  │  └─ polls.gif
    │  ├─ flags
    │  │  ├─ circle-flags--ae.svg
    │  │  ├─ circle-flags--at.svg
