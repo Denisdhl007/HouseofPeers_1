@@ -106,6 +106,7 @@
                     <li><a href="#sme-crowd" class="nav-link">SME & Crowd</a></li>
                     <li><a href="#money" class="nav-link">Money</a></li>
                     <li><a href="#alternative" class="nav-link">Alternative</a></li>
+                    <li><a href="#livestyle" class="nav-link">Livestyle</a></li>
                 </ul>
             </nav>
         </div>
@@ -130,6 +131,27 @@
                 </div>
             </div>
         </section>
+
+
+
+
+        <!-- Random Platform of the Month Section -->
+        <section id="platform-of-month" class="platform-month">
+            <div class="container">
+                <h2 class="section-title">PLATFORM OF THE MONTH</h2>
+                <p class="section-description">Each month we highlight an exceptional investment opportunity.</p>
+                
+                <div class="month-badge">
+                    <span class="month-name">JANUARY</span>
+                    <span class="year-number">2025</span>
+                </div>
+                
+                <div id="featured-platform-container" class="featured-platform-container">
+                    <!-- The enhanced featured platform will be generated here by JS -->
+                </div>
+            </div>
+        </section>
+
 
 
 
@@ -780,15 +802,15 @@
         </section>
 
         
-        <!-- SME & Crowd Section Preview -->
-        <section id="sme-crowd" class="platforms sme-crowd preview-section">
+        <!-- SME & Crowd Section (Full) -->
+        <section id="sme-crowd" class="platforms sme-crowd full-section">
             <div class="container">
                 <h2 class="section-title">SME & CROWDLENDING PLATFORMS</h2>
                 <p class="section-description">Invest in loans to small and medium enterprises across Europe with access to diverse lending opportunities.</p>
                 
-                <div class="platform-preview">
-                    <div class="platform-card featured" data-platform="mintos">
-                        <div class="featured-badge">FEATURED</div>
+                <div class="platform-grid">
+                    <!-- Mintos Platform Card -->
+                    <div class="platform-card" data-platform="mintos">
                         <div class="platform-header">
                             <h3 class="platform-title">MINTOS</h3>
                             <div class="platform-flags">
@@ -804,23 +826,345 @@
                         <p class="platform-description">Invest in loans with Mintos, offering a diverse range of investment options. Enjoy the flexibility of building a diversified portfolio with alternative and traditional investments.</p>
                         
                         <div class="platform-actions">
-                            <a href="https://www.mintos.com" target="_blank" class="btn btn-primary">INVEST NOW</a>
-                            <a href="#sme-crowd-full" class="btn btn-outline">VIEW ALL SME PLATFORMS</a>
+                            <a href="https://www.mintos.com/en/l/ref/T2A55M" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="mintos-about">
+                                        <span>ABOUT MINTOS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="mintos-about" class="accordion-content">
+                                        <p>At Mintos, they focus on long-term investing because most day traders lose money trying to beat the market. The platform helps you build a diversified portfolio with a unique mix of alternative and traditional investments, designed to grow your money over time with minimal effort.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="mintos-offer">
+                                        <span>SPECIAL OFFER</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="mintos-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">GET €50 + 1% BONUS</h4>
+                                            <p class="offer-value">LIMITED TIME OFFER</p>
+                                            <ul class="offer-benefits">
+                                                <li>€50 instant bonus</li>
+                                                <li>1% investment bonus</li>
+                                                <li>Invest €1,000+ within 60 days</li>
+                                            </ul>
+                                            <a href="https://www.mintos.com/en/l/ref/T2A55M" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="mintos-cashback">
+                                        <span>EARN 5% CASHBACK WITH NERA CAPITAL LOANS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="mintos-cashback" class="accordion-content">
+                                        <p>For a limited time, you can earn a 5% cashback when you invest €200 or more in Nera Capital loans with a 14% interest rate. This offer is valid from 27 November to 10 December 2024.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Goparity Platform Card -->
+                    <div class="platform-card" data-platform="goparity">
+                        <div class="platform-header">
+                            <h3 class="platform-title">GOPARITY</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/es.svg" alt="Spain flag" title="Platform available in Spain" class="flag">
+                                <img src="https://flagcdn.com/pt.svg" alt="Portugal flag" title="Platform available in Portugal" class="flag">
+                                <img src="https://flagcdn.com/it.svg" alt="Italy flag" title="Platform available in Italy" class="flag">
+                                <img src="https://flagcdn.com/fr.svg" alt="France flag" title="Platform available in France" class="flag">
+                                <img src="https://flagcdn.com/ie.svg" alt="Ireland flag" title="Platform available in Ireland" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">FROM €5</div>
+                        </div>
+                        
+                        <p class="platform-description">Invest in impactful projects from €5 and support sustainable development goals. Goparity is an impact finance platform connecting investors with sustainable projects.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://app.goparity.com/signup/voucher/DENIS24626" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="goparity-about">
+                                        <span>ABOUT GOPARITY</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="goparity-about" class="accordion-content">
+                                        <p>Goparity is an impact finance and investment app empowering people and companies to actively support the United Nation's Sustainable Development Goals. Our mission is to democratize access to sustainable finance by connecting individuals and organizations with companies needing funding for sustainable projects.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="goparity-offer">
+                                        <span>SPECIAL OFFER</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="goparity-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">€10 BONUS OFFER</h4>
+                                            <p class="offer-value">GET €10 WHEN YOU INVEST</p>
+                                            <ul class="offer-benefits">
+                                                <li>Sign up with code: DENIS24626</li>
+                                                <li>Invest in impactful projects within one month</li>
+                                                <li>Receive €10 bonus</li>
+                                            </ul>
+                                            <a href="https://app.goparity.com/signup/voucher/DENIS24626" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lendermarket Platform Card -->
+                    <div class="platform-card" data-platform="lendermarket">
+                        <div class="platform-header">
+                            <h3 class="platform-title">LENDERMARKET</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/es.svg" alt="Spain flag" title="Platform available in Spain" class="flag">
+                                <img src="https://flagcdn.com/fi.svg" alt="Finland flag" title="Platform available in Finland" class="flag">
+                                <img src="https://flagcdn.com/dk.svg" alt="Denmark flag" title="Platform available in Denmark" class="flag">
+                                <img src="https://flagcdn.com/se.svg" alt="Sweden flag" title="Platform available in Sweden" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">FROM €10</div>
+                        </div>
+                        
+                        <p class="platform-description">Invest in loans with Buyback Guarantees starting from €10 and enjoy high returns on your investment with this secure P2P platform.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://app.lendermarket.com/referral/link?code=6dqyzapc" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="lendermarket-about">
+                                        <span>ABOUT LENDERMARKET</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="lendermarket-about" class="accordion-content">
+                                        <p>Lendermarket is a P2P crowdfunding marketplace connecting investors with Buyback Guaranteed loans issued by digital consumer finance companies across Europe. With average annual returns of 13.8%, the platform offers a secure environment for investing in consumer and real estate loans.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="lendermarket-offer">
+                                        <span>REFERRAL BONUS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="lendermarket-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">1% CASHBACK OFFER</h4>
+                                            <p class="offer-value">EARN ON YOUR DEPOSITS</p>
+                                            <ul class="offer-benefits">
+                                                <li>Sign up with code: 6dqyzapc</li>
+                                                <li>Receive 1% cashback on net deposits for 30 days</li>
+                                                <li>Up to €3,000 in cashback</li>
+                                            </ul>
+                                            <a href="https://app.lendermarket.com/referral/link?code=6dqyzapc" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PretUp Platform Card -->
+                    <div class="platform-card" data-platform="pretup">
+                        <div class="platform-header">
+                            <h3 class="platform-title">PRETUP</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/fr.svg" alt="France flag" title="Platform available in France" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">FROM €20</div>
+                        </div>
+                        
+                        <p class="platform-description">PretUp is a crowdfunding platform connecting French SMEs with individual investors. Invest in the real economy from €20 and support French businesses while earning attractive returns.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://www.pretup.fr" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="pretup-about">
+                                        <span>ABOUT PRETUP</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="pretup-about" class="accordion-content">
+                                        <p>PretUp is a major player in French crowdlending, licensed by the AMF (Financial Markets Authority) and ACPR (Prudential Control Authority). The platform connects individual investors with carefully selected French SMEs, offering a secure investment environment.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="pretup-offer">
+                                        <span>WELCOME OFFER</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="pretup-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">€15 WELCOME BONUS</h4>
+                                            <p class="offer-value">EXCLUSIVE OFFER</p>
+                                            <ul class="offer-benefits">
+                                                <li>Use referral code: YRD2PBNJ</li>
+                                                <li>Invest minimum €200 within 3 months</li>
+                                                <li>Receive €15 bonus</li>
+                                            </ul>
+                                            <a href="https://www.pretup.fr" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swaper Platform Card -->
+                    <div class="platform-card" data-platform="swaper">
+                        <div class="platform-header">
+                            <h3 class="platform-title">SWAPER</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/ee.svg" alt="Estonia flag" title="Platform available in Estonia" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">UP TO 16% RETURNS</div>
+                        </div>
+                        
+                        <p class="platform-description">Invest in loans with Buyback Guarantees starting from €10 and earn up to 16% annual returns. Enjoy the security of guaranteed buyback on loans overdue by more than 60 days.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://www.swaper.com/#/ref/i91rrPDeHH" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="swaper-about">
+                                        <span>ABOUT SWAPER</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="swaper-about" class="accordion-content">
+                                        <p>Swaper is a P2P lending platform connecting users with loans issued by various loan originators. The platform offers Buyback Guarantees for loans overdue by more than 60 days, making it a safer way to invest in the loans market.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="swaper-referral">
+                                        <span>REFERRAL CODE</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="swaper-referral" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">START INVESTING TODAY</h4>
+                                            <p class="offer-value">USE REFERRAL CODE</p>
+                                            <ul class="offer-benefits">
+                                                <li>Sign up with referral code: i91rrPDeHH</li>
+                                                <li>Set up Auto-Invest or choose loans manually</li>
+                                                <li>Enjoy fixed interest rates and loyalty bonuses</li>
+                                            </ul>
+                                            <a href="https://www.swaper.com/#/ref/i91rrPDeHH" target="_blank" class="btn btn-accent">GET STARTED</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Funding Societies Platform Card -->
+                    <div class="platform-card" data-platform="funding-societies">
+                        <div class="platform-header">
+                            <h3 class="platform-title">FUNDING SOCIETIES</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/sg.svg" alt="Singapore flag" title="Platform available in Singapore" class="flag">
+                                <img src="https://flagcdn.com/my.svg" alt="Malaysia flag" title="Platform available in Malaysia" class="flag">
+                                <img src="https://flagcdn.com/ph.svg" alt="Philippines flag" title="Platform available in Philippines" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">SOUTHEAST ASIA</div>
+                        </div>
+                        
+                        <p class="platform-description">Funding Societies is the pioneer of SME Digital Financing and Debt Investment Platforms in Southeast Asia, providing fast, accessible financing options for businesses.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://www.fundingsocieties.com" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="fs-about">
+                                        <span>ABOUT FUNDING SOCIETIES</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="fs-about" class="accordion-content">
+                                        <p>Founded in 2015, Funding Societies has quickly become the largest digital financing platform for small and medium-sized enterprises (SMEs) in Southeast Asia. The platform provides fast, accessible financing options for businesses in need, with loans funded by both individual and institutional investors.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="fs-offer">
+                                        <span>GET S$20 CASHBACK</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="fs-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">S$20 CASHBACK OFFER</h4>
+                                            <p class="offer-value">SPECIAL PROMOTION</p>
+                                            <ul class="offer-benefits">
+                                                <li>Log in to your Funding Societies investor account</li>
+                                                <li>Use the referral link</li>
+                                                <li>Receive S$20 cashback directly to your escrow account</li>
+                                            </ul>
+                                            <a href="https://www.fundingsocieties.com" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Money Section Preview -->
-        <section id="money" class="platforms money preview-section">
+        <!-- Money Section (Full) -->
+        <section id="money" class="platforms money full-section">
             <div class="container">
                 <h2 class="section-title">MONEY PLATFORMS</h2>
                 <p class="section-description">Discover modern banking and investment solutions to manage your finances more efficiently.</p>
                 
-                <div class="platform-preview">
-                    <div class="platform-card featured" data-platform="revolut">
-                        <div class="featured-badge">FEATURED</div>
+                <div class="platform-grid">
+                    <!-- Revolut Platform Card -->
+                    <div class="platform-card" data-platform="revolut">
                         <div class="platform-header">
                             <h3 class="platform-title">REVOLUT</h3>
                             <div class="platform-flags">
@@ -833,26 +1177,364 @@
                             <div class="investment-tag">DIGITAL BANKING</div>
                         </div>
                         
-                        <p class="platform-description">Revolut is your gateway to a smarter financial future. Manage money, exchange currencies, and track your spending with ease—all in one app.</p>
+                        <p class="platform-description">Revolut is your gateway to a smarter financial future. Manage money, exchange currencies, and track your spending with ease—all in one app. Join over 50 million people who recommend Revolut for global finance at great rates.</p>
                         
                         <div class="platform-actions">
                             <a href="https://www.revolut.com/en-BE/referral/?referral-code=denis2amu%21MAY1-22-AR" target="_blank" class="btn btn-primary">GET STARTED</a>
-                            <a href="#money-full" class="btn btn-outline">VIEW ALL MONEY PLATFORMS</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="revolut-about">
+                                        <span>ABOUT REVOLUT</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="revolut-about" class="accordion-content">
+                                        <p>Revolut is an all-in-one financial app that gives you the power to manage your money effortlessly. From spending, saving, and exchanging currencies to accessing investment options, Revolut helps you take control of your financial future.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="revolut-offer">
+                                        <span>REWARDS PROGRAM</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="revolut-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">GET REWARDS</h4>
+                                            <p class="offer-value">JOIN REVOLUT TODAY</p>
+                                            <ul class="offer-benefits">
+                                                <li>Earn cash or crypto rewards</li>
+                                                <li>Simple digital banking</li>
+                                                <li>No hidden fees</li>
+                                            </ul>
+                                            <a href="https://www.revolut.com/en-BE/referral/?referral-code=denis2amu%21MAY1-22-AR" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="revolut-milestones">
+                                        <span>REVOLUT MILESTONES</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="revolut-milestones" class="accordion-content">
+                                        <p>Revolut has become one of the fastest-growing financial apps globally, with millions of users and more than 100 million transactions each month. As of 2023, Revolut is valued at approximately £31 billion ($40 billion USD), reflecting its impressive growth and ongoing expansion in the fintech industry.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sarwa Platform Card -->
+                    <div class="platform-card" data-platform="sarwa">
+                        <div class="platform-header">
+                            <h3 class="platform-title">SARWA</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/ae.svg" alt="United Arab Emirates flag" title="Platform available in UAE" class="flag">
+                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">STOCKS & ETFs</div>
+                        </div>
+                        
+                        <p class="platform-description">Invest in stocks, ETFs, and manage your finances with Sarwa. Sarwa provides expert-designed portfolios, trading, and passive investing in one easy-to-use platform.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://www.sarwa.co/invite/HENIN" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="sarwa-about">
+                                        <span>ABOUT SARWA</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="sarwa-about" class="accordion-content">
+                                        <p>Sarwa is a platform designed for individuals who want to make investing simple, with expertly designed long-term portfolios that are globally diversified to minimize risk and maximize returns. Sarwa also offers trading services for U.S. stocks and ETFs, enabling users to buy and sell with no withdrawal fees.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="sarwa-offer">
+                                        <span>REFERRAL BONUS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="sarwa-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">EARN $50 BONUS</h4>
+                                            <p class="offer-value">FOR YOU AND YOUR FRIEND</p>
+                                            <ul class="offer-benefits">
+                                                <li>Invite a friend to Sarwa</li>
+                                                <li>They invest $2,500+ within 3 months</li>
+                                                <li>You both earn $50 each</li>
+                                            </ul>
+                                            <a href="https://www.sarwa.co/invite/HENIN" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="sarwa-milestones">
+                                        <span>SARWA MILESTONES</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="sarwa-milestones" class="accordion-content">
+                                        <p>Sarwa has grown to become a leading platform in the UAE and beyond, helping investors manage their wealth. With hundreds of millions in assets under management, Sarwa continues to innovate and improve its platform.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trade Republic Platform Card -->
+                    <div class="platform-card" data-platform="trade-republic">
+                        <div class="platform-header">
+                            <h3 class="platform-title">TRADE REPUBLIC</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/de.svg" alt="Germany flag" title="Platform available in Germany" class="flag">
+                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">COMMISSION-FREE</div>
+                        </div>
+                        
+                        <p class="platform-description">Trade and invest in stocks, ETFs, and bonds with Trade Republic. A mobile-first investing platform offering commission-free trading and innovative financial services.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://refnocode.trade.re/4nzjbbk0" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="tr-about">
+                                        <span>ABOUT TRADE REPUBLIC</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="tr-about" class="accordion-content">
+                                        <p>Trade Republic is a German fintech platform revolutionizing investing by offering commission-free trading of stocks, ETFs, and bonds. Designed for mobile-first users, it provides an intuitive and accessible way to manage investments and grow wealth.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="tr-offer">
+                                        <span>6% INTEREST BONUS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="tr-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">6% P.A. INTEREST OFFER</h4>
+                                            <p class="offer-value">ON UP TO €10,000</p>
+                                            <ul class="offer-benefits">
+                                                <li>Open account before January 4, 2025</li>
+                                                <li>Deposit at least €100</li>
+                                                <li>Complete 3 buy-in transactions</li>
+                                            </ul>
+                                            <a href="https://refnocode.trade.re/4nzjbbk0" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- N26 Platform Card -->
+                    <div class="platform-card" data-platform="n26">
+                        <div class="platform-header">
+                            <h3 class="platform-title">N26</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/de.svg" alt="Germany flag" title="Platform available in Germany" class="flag">
+                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">MOBILE BANKING</div>
+                        </div>
+                        
+                        <p class="platform-description">N26 is your modern, digital banking solution. Manage your finances seamlessly with a sleek mobile app, instant notifications, and smart features that make banking simple, transparent, and user-friendly.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://n26.com/r/denish6161" target="_blank" class="btn btn-primary">GET STARTED</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="n26-about">
+                                        <span>ABOUT N26</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="n26-about" class="accordion-content">
+                                        <p>N26 is a cutting-edge digital bank that provides a completely mobile banking experience. Founded in Berlin, N26 offers a transparent, intuitive banking solution that puts you in control of your finances with real-time tracking, instant notifications, and smart money management tools.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="n26-offer">
+                                        <span>REFERRAL PROGRAM</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="n26-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">REFER & EARN</h4>
+                                            <p class="offer-value">JOIN N26 TODAY</p>
+                                            <ul class="offer-benefits">
+                                                <li>Referral Code: denish6161</li>
+                                                <li>Quick and easy sign-up process</li>
+                                                <li>Experience modern banking</li>
+                                            </ul>
+                                            <a href="https://n26.com/r/denish6161" target="_blank" class="btn btn-accent">SIGN UP NOW</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sumeria Platform Card -->
+                    <div class="platform-card" data-platform="sumeria">
+                        <div class="platform-header">
+                            <h3 class="platform-title">SUMERIA</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/fr.svg" alt="France flag" title="Platform available in France" class="flag">
+                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">EXPENSE MANAGEMENT</div>
+                        </div>
+                        
+                        <p class="platform-description">Manage your daily expenses effortlessly with Sumeria's mobile app and Visa card. Enjoy an assisted savings program that makes saving simple and intuitive.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://lydia-app.onelink.me/BXEW/zdyy6kar" target="_blank" class="btn btn-primary">GET STARTED</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="sumeria-about">
+                                        <span>ABOUT SUMERIA</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="sumeria-about" class="accordion-content">
+                                        <p>Sumeria is a comprehensive financial platform designed to simplify your everyday money management. With a user-friendly mobile app and a Visa card, you can track expenses, manage budgets, and save money with ease.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="sumeria-offer">
+                                        <span>REFERRAL PROGRAM</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="sumeria-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">JOIN SUMERIA</h4>
+                                            <p class="offer-value">USE REFERRAL CODE</p>
+                                            <ul class="offer-benefits">
+                                                <li>Referral Link: Special link</li>
+                                                <li>Referral Code: DHP9XSBACC</li>
+                                                <li>Easy sign-up process</li>
+                                            </ul>
+                                            <a href="https://lydia-app.onelink.me/BXEW/zdyy6kar" target="_blank" class="btn btn-accent">SIGN UP NOW</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nexo Platform Card -->
+                    <div class="platform-card" data-platform="nexo">
+                        <div class="platform-header">
+                            <h3 class="platform-title">NEXO</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/us.svg" alt="United States flag" title="Platform available in United States" class="flag">
+                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">CRYPTO ASSETS</div>
+                        </div>
+                        
+                        <p class="platform-description">Nexo is the world's leading regulated institution for digital assets. Maximize the value of cryptocurrencies with tax-efficient Instant Crypto Credit Lines, high-yield Earn Crypto Interest products, and more.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://nexo.com/ref/ragdrlweop?src=web-link" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="nexo-about">
+                                        <span>ABOUT NEXO</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="nexo-about" class="accordion-content">
+                                        <p>Nexo offers a suite of services to help you earn, borrow, and manage digital assets. With Nexo's Earn Crypto Interest product, you can earn up to 14% annually, while leveraging your assets with crypto-backed loans and more.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="nexo-offer">
+                                        <span>EARN UP TO $25 IN BTC</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="nexo-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">BITCOIN REWARDS</h4>
+                                            <p class="offer-value">JOIN NEXO TODAY</p>
+                                            <ul class="offer-benefits">
+                                                <li>Top up $500 or more</li>
+                                                <li>Trade over $1,000</li>
+                                                <li>Borrow from Nexo</li>
+                                            </ul>
+                                            <a href="https://nexo.com/ref/ragdrlweop?src=web-link" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="nexo-milestones">
+                                        <span>NEXO MILESTONES</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="nexo-milestones" class="accordion-content">
+                                        <p>Nexo has grown to become the leader in crypto asset management, with over $80 billion processed and 4M+ users globally. Nexo provides industry-leading custodial insurance and security for digital assets.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Alternative Section Preview -->
-        <section id="alternative" class="platforms alternative preview-section">
+        <!-- Alternative Investment Section (Full) -->
+        <section id="alternative" class="platforms alternative full-section">
             <div class="container">
                 <h2 class="section-title">ALTERNATIVE INVESTMENT PLATFORMS</h2>
                 <p class="section-description">Explore unique investment opportunities beyond traditional assets, from collectibles to sustainable forests.</p>
                 
-                <div class="platform-preview">
-                    <div class="platform-card featured" data-platform="splint">
-                        <div class="featured-badge">FEATURED</div>
+                <div class="platform-grid">
+                    <!-- Splint Invest Platform Card -->
+                    <div class="platform-card" data-platform="splint">
                         <div class="platform-header">
                             <h3 class="platform-title">SPLINT INVEST</h3>
                             <div class="platform-flags">
@@ -865,40 +1547,265 @@
                             <div class="investment-tag">FROM €50</div>
                         </div>
                         
-                        <p class="platform-description">Invest in tangible assets like whisky, watches, and wine starting from €50. Join our community of investors and diversify your portfolio with carefully selected opportunities.</p>
+                        <p class="platform-description">Splint Invest opens the doors to alternative investments. Invest in tangible assets like whisky, watches, and wine starting from €50. Join our community of investors and diversify your portfolio with carefully selected opportunities.</p>
                         
                         <div class="platform-actions">
                             <a href="https://splintinvest.onelink.me/n6C4/start" target="_blank" class="btn btn-primary">INVEST NOW</a>
-                            <a href="#alternative-full" class="btn btn-outline">VIEW ALL ALTERNATIVE PLATFORMS</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="splint-about">
+                                        <span>ABOUT SPLINT</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="splint-about" class="accordion-content">
+                                        <p>Splint is your alternative investment platform, making assets once reserved for wealthy investors accessible. Invest in tangible goods like whisky, luxury watches, and fine wine for as little as €50.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="splint-offer">
+                                        <span>WELCOME BONUS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="splint-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">€50 FREE BONUS</h4>
+                                            <p class="offer-value">LIMITED TIME OFFER</p>
+                                            <ul class="offer-benefits">
+                                                <li>Download the app</li>
+                                                <li>Create your account</li>
+                                                <li>Enter code 36155552</li>
+                                                <li>Receive a €50 welcome bonus</li>
+                                            </ul>
+                                            <a href="https://splintinvest.onelink.me/n6C4/start" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="splint-performance">
+                                        <span>PERFORMANCE</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="splint-performance" class="accordion-content">
+                                        <p><strong>Key Figures (June 2024):</strong></p>
+                                        <p>14,427 active users</p>
+                                        <p>346 available assets</p>
+                                        <p>€19.2M total investments</p>
+                                        <p>Average annual return of 15.2%</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section> class="platforms sme-crowd preview-section">
-            <div class="container">
-                <h2 class="section-title">SME & Crowdlending Platforms</h2>
-                <p class="section-description">Invest in loans to small and medium enterprises across Europe with access to diverse lending opportunities.</p>
-                
-                <div class="platform-preview">
-                    <div class="platform-card featured" data-platform="mintos">
-                        <div class="featured-badge">Featured</div>
+
+                    <!-- Konvi Platform Card -->
+                    <div class="platform-card" data-platform="konvi">
                         <div class="platform-header">
-                            <h3 class="platform-title">Mintos</h3>
+                            <h3 class="platform-title">KONVI</h3>
                             <div class="platform-flags">
-                                <img src="https://flagcdn.com/ee.svg" alt="Estonia flag" title="Platform available in Estonia" class="flag">
                                 <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
                             </div>
                         </div>
                         
                         <div class="platform-highlights">
-                            <div class="investment-tag">Flexible Investments</div>
+                            <div class="investment-tag">FROM €250</div>
                         </div>
                         
-                        <p class="platform-description">Invest in loans with Mintos, offering a diverse range of investment options. Enjoy the flexibility of building a diversified portfolio with alternative and traditional investments.</p>
+                        <p class="platform-description">Konvi is revolutionizing alternative investments by making luxury assets accessible to everyone. From rare art and watches to fine wines and real estate, invest in fractions of high-value assets starting from just €250.</p>
                         
                         <div class="platform-actions">
-                            <a href="https://www.mintos.com" target="_blank" class="btn btn-primary">Invest Now</a>
-                            <a href="#sme-crowd-full" class="btn btn-outline">View All SME Platforms</a>
+                            <a href="https://konvi.app/" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="konvi-about">
+                                        <span>ABOUT KONVI</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="konvi-about" class="accordion-content">
+                                        <p>Founded in 2020, Konvi democratizes access to alternative investments like luxury watches, rare art, and prime real estate. By breaking traditional barriers, we enable fractional ownership of high-value assets previously reserved for wealthy individuals.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="konvi-offer">
+                                        <span>WELCOME BONUS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="konvi-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">€10 WELCOME BONUS</h4>
+                                            <p class="offer-value">DOUBLE REWARD OFFER</p>
+                                            <ul class="offer-benefits">
+                                                <li>Use code NAC4C3 to get €10</li>
+                                                <li>Earn another €10 when your friend invests</li>
+                                                <li>On Konvi Day (once a month), your bonus is multiplied by 5!</li>
+                                            </ul>
+                                            <a href="https://konvi.app/signup" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="konvi-performance">
+                                        <span>INVESTMENT PERFORMANCE</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="konvi-performance" class="accordion-content">
+                                        <p><strong>Strong Track Record:</strong></p>
+                                        <p>Historical returns of 8-35% per year*</p>
+                                        <p>Low correlation with traditional markets</p>
+                                        <p>Proven hedge against inflation</p>
+                                        <p>Expert-curated assets from 10 different categories</p>
+                                        <p><small>*Past performance does not guarantee future results</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeless Investments Platform Card -->
+                    <div class="platform-card" data-platform="timeless">
+                        <div class="platform-header">
+                            <h3 class="platform-title">TIMELESS INVESTMENTS</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/de.svg" alt="Germany flag" title="Platform available in Germany" class="flag">
+                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">FROM €50</div>
+                        </div>
+                        
+                        <p class="platform-description">Timeless is Europe's leading platform for digital collectible investments. Invest in fractions of rare watches, classic cars, art, and whisky starting from just €50. Join over 448,000 investors accessing curated collectibles.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://www.timeless.investments/en/referral/N_tGOrh/invitation" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="timeless-about">
+                                        <span>ABOUT TIMELESS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="timeless-about" class="accordion-content">
+                                        <p>Founded in 2018 in Berlin, Timeless (New Horizon GmbH) revolutionizes collectible investments through blockchain technology. Backed by prestigious investors including EQT Ventures, Porsche Ventures, and LA ROCA Capital, we've built a team of 40+ experts dedicated to democratizing access to premium collectibles.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="timeless-process">
+                                        <span>HOW IT WORKS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="timeless-process" class="accordion-content">
+                                        <p><strong>Our Investment Process:</strong></p>
+                                        <p>Our experts identify and authenticate potential assets</p>
+                                        <p>We manage storage, insurance, and maintenance</p>
+                                        <p>You invest from €50 per fraction</p>
+                                        <p>Trade your fractions with other investors</p>
+                                        <p>We sell at the optimal time (2-8 year holding period)</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="timeless-performance">
+                                        <span>TRACK RECORD</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="timeless-performance" class="accordion-content">
+                                        <p><strong>Impressive Returns:</strong></p>
+                                        <p>Knight Frank Luxury Investment Index: +16% in 2022</p>
+                                        <p>Watch exits with up to 200% returns (Vacheron Constantin)</p>
+                                        <p>Wine & Spirits showing 9-12% CAGR</p>
+                                        <p>Classic cars delivering 7-18% CAGR</p>
+                                        <p><small>Past performance does not guarantee future results</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EcoTree Platform Card -->
+                    <div class="platform-card" data-platform="ecotree">
+                        <div class="platform-header">
+                            <h3 class="platform-title">ECOTREE</h3>
+                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/fr.svg" alt="France flag" title="Platform available in France" class="flag">
+                                <img src="https://flagcdn.com/dk.svg" alt="Denmark flag" title="Platform available in Denmark" class="flag">
+                            </div>
+                        </div>
+                        
+                        <div class="platform-highlights">
+                            <div class="investment-tag">FROM €15</div>
+                        </div>
+                        
+                        <p class="platform-description">EcoTree is revolutionizing forest investment and conservation. Own trees in sustainably managed forests starting at €15, contribute to biodiversity preservation, and earn returns when your trees are harvested for timber.</p>
+                        
+                        <div class="platform-actions">
+                            <a href="https://ecotree.green" target="_blank" class="btn btn-primary">INVEST NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="ecotree-about">
+                                        <span>ABOUT ECOTREE</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="ecotree-about" class="accordion-content">
+                                        <p>EcoTree is a certified B Corp specialized in ecological and economic forest valorization. We manage forests sustainably, focusing on biodiversity preservation and climate change adaptation, while offering individuals the opportunity to own trees and benefit from their economic value.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="ecotree-offer">
+                                        <span>WELCOME GIFT</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="ecotree-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">FREE TREE OFFER</h4>
+                                            <p class="offer-value">LIMITED TIME OFFER</p>
+                                            <ul class="offer-benefits">
+                                                <li>Use code 5WQR9B</li>
+                                                <li>Get your first tree free</li>
+                                                <li>Track your tree's growth and impact</li>
+                                                <li>Start your journey as a forest owner today</li>
+                                            </ul>
+                                            <a href="https://ecotree.green" target="_blank" class="btn btn-accent">CLAIM FREE TREE</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="ecotree-impact">
+                                        <span>ENVIRONMENTAL IMPACT</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="ecotree-impact" class="accordion-content">
+                                        <p><strong>Our Contribution:</strong></p>
+                                        <p>Each tree you own:</p>
+                                        <p>Absorbs CO2 and helps fight climate change</p>
+                                        <p>Creates habitat for biodiversity</p>
+                                        <p>Supports sustainable timber production</p>
+                                        <p>Grows approximately 2% in value annually</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -906,69 +1813,98 @@
         </section>
 
 
-        <!-- Money Section Preview -->
-        <section id="money" class="platforms money preview-section">
+        <!-- Livestyle Section (Full) -->
+        <section id="livestyle" class="platforms livestyle full-section">
             <div class="container">
-                <h2 class="section-title">Money Platforms</h2>
-                <p class="section-description">Discover modern banking and investment solutions to manage your finances more efficiently.</p>
+                <h2 class="section-title">LIVESTYLE OPPORTUNITIES</h2>
+                <p class="section-description">Discover alternative lifestyle opportunities including electric scooter subscriptions and more innovative services for modern living.</p>
                 
-                <div class="platform-preview">
-                    <div class="platform-card featured" data-platform="revolut">
-                        <div class="featured-badge">Featured</div>
+                <div class="platform-grid">
+                    <!-- Augment Platform Card -->
+                    <div class="platform-card" data-platform="augment">
                         <div class="platform-header">
-                            <h3 class="platform-title">Revolut</h3>
+                            <h3 class="platform-title">AUGMENT</h3>
                             <div class="platform-flags">
-                                <img src="https://flagcdn.com/gb.svg" alt="United Kingdom flag" title="Platform available in UK" class="flag">
-                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
-                            </div>
-                        </div>
-                        
-                        <div class="platform-highlights">
-                            <div class="investment-tag">Digital Banking</div>
-                        </div>
-                        
-                        <p class="platform-description">Revolut is your gateway to a smarter financial future. Manage money, exchange currencies, and track your spending with ease—all in one app.</p>
-                        
-                        <div class="platform-actions">
-                            <a href="https://www.revolut.com/en-BE/referral/?referral-code=denis2amu%21MAY1-22-AR" target="_blank" class="btn btn-primary">Get Started</a>
-                            <a href="#money-full" class="btn btn-outline">View All Money Platforms</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Alternative Section Preview -->
-        <section id="alternative" class="platforms alternative preview-section">
-            <div class="container">
-                <h2 class="section-title">Alternative Investment Platforms</h2>
-                <p class="section-description">Explore unique investment opportunities beyond traditional assets, from collectibles to sustainable forests.</p>
-                
-                <div class="platform-preview">
-                    <div class="platform-card featured" data-platform="splint">
-                        <div class="featured-badge">Featured</div>
-                        <div class="platform-header">
-                            <h3 class="platform-title">Splint Invest</h3>
-                            <div class="platform-flags">
+                                <img src="https://flagcdn.com/be.svg" alt="Belgium flag" title="Platform available in Belgium" class="flag">
+                                <img src="https://flagcdn.com/at.svg" alt="Austria flag" title="Platform available in Austria" class="flag">
+                                <img src="https://flagcdn.com/dk.svg" alt="Denmark flag" title="Platform available in Denmark" class="flag">
+                                <img src="https://flagcdn.com/fi.svg" alt="Finland flag" title="Platform available in Finland" class="flag">
+                                <img src="https://flagcdn.com/fr.svg" alt="France flag" title="Platform available in France" class="flag">
+                                <img src="https://flagcdn.com/it.svg" alt="Italy flag" title="Platform available in Italy" class="flag">
+                                <img src="https://flagcdn.com/lu.svg" alt="Luxembourg flag" title="Platform available in Luxembourg" class="flag">
+                                <img src="https://flagcdn.com/es.svg" alt="Spain flag" title="Platform available in Spain" class="flag">
+                                <img src="https://flagcdn.com/se.svg" alt="Sweden flag" title="Platform available in Sweden" class="flag">
                                 <img src="https://flagcdn.com/ch.svg" alt="Switzerland flag" title="Platform available in Switzerland" class="flag">
-                                <img src="https://flagcdn.com/eu.svg" alt="Europe flag" title="Available in Europe" class="flag">
                             </div>
                         </div>
                         
                         <div class="platform-highlights">
-                            <div class="investment-tag">From €50</div>
+                            <div class="investment-tag">E-SCOOTER SUBSCRIPTION</div>
                         </div>
                         
-                        <p class="platform-description">Invest in tangible assets like whisky, watches, and wine starting from €50. Join our community of investors and diversify your portfolio with carefully selected opportunities.</p>
+                        <p class="platform-description">Electric scooter subscription service with full maintenance included. Get a premium electric scooter with worry-free maintenance and express repairs.</p>
                         
                         <div class="platform-actions">
-                            <a href="https://splintinvest.onelink.me/n6C4/start" target="_blank" class="btn btn-primary">Invest Now</a>
-                            <a href="#alternative-full" class="btn btn-outline">View All Alternative Platforms</a>
+                            <a href="https://augment.eco" target="_blank" class="btn btn-primary">SUBSCRIBE NOW</a>
+                            <button class="btn btn-outline toggle-details">DETAILS</button>
+                        </div>
+                        
+                        <div class="platform-details">
+                            <div class="detail-accordions">
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="augment-about">
+                                        <span>ABOUT AUGMENT</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="augment-about" class="accordion-content">
+                                        <p>Augment specializes in electric scooter subscriptions with a monthly payment model. Their comprehensive service includes maintenance and express repairs, ensuring a worry-free user experience. The platform also offers a mobile application available on the Google Play Store, allowing users to control their scooter and maximize its potential.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="augment-offer">
+                                        <span>SPECIAL OFFER</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="augment-offer" class="accordion-content">
+                                        <div class="offer-box">
+                                            <h4 class="offer-title">SPECIAL DISCOUNT!</h4>
+                                            <p class="offer-value">GET 5% OFF YOUR SUBSCRIPTION</p>
+                                            <ul class="offer-benefits">
+                                                <li>5% discount on your subscription</li>
+                                                <li>Access to full maintenance services</li>
+                                                <li>Mobile app access for scooter control</li>
+                                            </ul>
+                                            <a href="https://augment.eco" target="_blank" class="btn btn-accent">CLAIM OFFER</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <button class="accordion-trigger" aria-expanded="false" aria-controls="augment-promo">
+                                        <span>PROMO CODE DETAILS</span>
+                                        <span class="accordion-icon"></span>
+                                    </button>
+                                    <div id="augment-promo" class="accordion-content">
+                                        <div class="platform-description">
+                                            <p>Use this referral code when signing up to get your 5% discount:</p>
+                                            <p><strong>Code: C6RQL</strong></p>
+                                            <p><a href="https://augment.eco" target="_blank" class="btn btn-accent">SIGN UP WITH CODE</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+
+
+
+
+
     </main>
 
     <!-- Footer -->
@@ -987,6 +1923,7 @@
                         <li><a href="#sme-crowd">SME & CROWD</a></li>
                         <li><a href="#money">MONEY</a></li>
                         <li><a href="#alternative">ALTERNATIVE</a></li>
+                        <li><a href="#livestyle">LIVESTYLE</a></li>
                     </ul>
                 </div>
                 

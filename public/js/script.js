@@ -468,6 +468,210 @@ function updateActiveNavLink() {
     });
 }
 
+
+
+
+
+
+
+
+
+/**
+ * Platform of the Month functionality
+ * Creates a special enhanced display for the featured platform
+ */
+function initRandomPlatformOfMonth() {
+    // Get current date
+    const now = new Date();
+    const currentMonth = now.getMonth(); // 0-11 (Jan-Dec)
+    const currentYear = now.getFullYear();
+    
+    // Array of month names
+    const monthNames = [
+        "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+        "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+    ];
+    
+    // Update month badge
+    const monthNameEl = document.querySelector('.month-name');
+    const yearNumberEl = document.querySelector('.year-number');
+    
+    if (monthNameEl) {
+        monthNameEl.textContent = monthNames[currentMonth];
+    }
+    
+    if (yearNumberEl) {
+        yearNumberEl.textContent = currentYear.toString();
+    }
+    
+    // Collect all platform cards from the page
+    let allPlatformCards = document.querySelectorAll('.platforms .platform-card');
+    
+    // If no cards found yet (page might still be loading), set a retry
+    if (allPlatformCards.length === 0) {
+        setTimeout(initRandomPlatformOfMonth, 500);
+        return;
+    }
+    
+    // Convert NodeList to Array
+    allPlatformCards = Array.from(allPlatformCards);
+    
+    // Use the current month and year as a seed for the random selection
+    const seed = currentMonth + currentYear * 12;
+    const randomIndex = seededRandom(0, allPlatformCards.length - 1, seed);
+    
+    // Select a random platform card
+    const selectedCard = allPlatformCards[randomIndex];
+    
+    // If we found a card, create an enhanced version
+    if (selectedCard) {
+        const container = document.getElementById('featured-platform-container');
+        if (container) {
+            // Extract data from the selected card
+            const platformTitle = selectedCard.querySelector('.platform-title')?.textContent || 'Featured Platform';
+            const platformDescription = selectedCard.querySelector('.platform-description')?.textContent || '';
+            const investmentTag = selectedCard.querySelector('.investment-tag')?.textContent || '';
+            const primaryAction = selectedCard.querySelector('.platform-actions a')?.href || '#';
+            const primaryActionText = selectedCard.querySelector('.platform-actions a')?.textContent || 'INVEST NOW';
+            
+            // Get flags
+            const flags = selectedCard.querySelectorAll('.platform-flags img');
+            const flagUrls = [];
+            flags.forEach(flag => {
+                flagUrls.push({
+                    src: flag.src,
+                    alt: flag.alt,
+                    title: flag.title
+                });
+            });
+            
+            // Determine category based on platform type or parent section
+            const platformType = selectedCard.dataset.platform || '';
+            let categoryLink = '#real-estate'; // Default
+            
+            if (platformType.includes('bricks') || platformType.includes('rendity') || 
+                platformType.includes('brxs') || platformType.includes('stake')) {
+                categoryLink = '#real-estate';
+            } else if (platformType.includes('mintos') || platformType.includes('goparity')) {
+                categoryLink = '#sme-crowd';
+            } else if (platformType.includes('revolut') || platformType.includes('nexo')) {
+                categoryLink = '#money';
+            } else if (platformType.includes('splint') || platformType.includes('timeless')) {
+                categoryLink = '#alternative';
+            } else if (platformType.includes('augment')) {
+                categoryLink = '#livestyle';
+            }
+            
+            // Generate benefits based on platform type
+            const benefits = [];
+            
+            // Add platform-specific benefits
+            if (platformType.includes('stake') || platformType.includes('bricks') || 
+                platformType.includes('brxs') || platformType.includes('rendity')) {
+                benefits.push('Fractional real estate ownership');
+                benefits.push('Regular passive income from rental yields');
+                benefits.push('Long-term appreciation potential');
+            } else if (platformType.includes('mintos') || platformType.includes('goparity')) {
+                benefits.push('Diversified lending opportunities');
+                benefits.push('Fixed returns on investments');
+                benefits.push('Support for small and medium enterprises');
+            } else if (platformType.includes('revolut') || platformType.includes('nexo')) {
+                benefits.push('Modern digital financial services');
+                benefits.push('Easy to use mobile applications');
+                benefits.push('Competitive rates and fees');
+            } else if (platformType.includes('splint') || platformType.includes('timeless')) {
+                benefits.push('Access to unique asset classes');
+                benefits.push('Portfolio diversification opportunities');
+                benefits.push('Historically uncorrelated with markets');
+            } else if (platformType.includes('augment')) {
+                benefits.push('Hassle-free subscription service');
+                benefits.push('All maintenance included');
+                benefits.push('Environmentally friendly transportation');
+            } else {
+                benefits.push('Exclusive investment opportunities');
+                benefits.push('Professional portfolio management');
+                benefits.push('Competitive returns on investment');
+            }
+            
+            // Create new HTML structure for the enhanced featured platform
+            const featuredPlatformHTML = `
+                <div class="featured-platform">
+                    <div class="featured-platform-badge">FEATURED THIS MONTH</div>
+                    
+                    <div class="featured-platform-image">
+                        <img class="platform-logo" src="./public/assets/platforms/${platformType || 'default'}.png" alt="${platformTitle}" onerror="this.src='./public/assets/platforms/default.png';">
+                        
+                        <div class="flags-container">
+                            ${flagUrls.map(flag => `
+                                <img src="${flag.src}" alt="${flag.alt}" title="${flag.title}" class="featured-flag">
+                            `).join('')}
+                        </div>
+                        
+                        <div class="featured-investment-tag">${investmentTag}</div>
+                    </div>
+                    
+                    <div class="featured-platform-content">
+                        <h3 class="featured-platform-title">${platformTitle}</h3>
+                        <p class="featured-platform-description">${platformDescription}</p>
+                        
+                        <div class="featured-benefits">
+                            ${benefits.map(benefit => `
+                                <div class="benefit-item">
+                                    <div class="benefit-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20 6L9 17l-5-5"/>
+                                        </svg>
+                                    </div>
+                                    <div class="benefit-text">${benefit}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="featured-actions">
+                            <a href="${primaryAction}" target="_blank" class="featured-btn featured-btn-primary">${primaryActionText}</a>
+                            <a href="${categoryLink}" class="featured-btn featured-btn-outline">VIEW CATEGORY</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Set the HTML to the container
+            container.innerHTML = featuredPlatformHTML;
+        }
+    }
+}
+
+/**
+ * Seeded random number generator for consistent results based on seeds
+ * @param {number} min - Minimum value (inclusive)
+ * @param {number} max - Maximum value (inclusive)
+ * @param {number} seed - Seed for randomization
+ * @returns {number} - Random integer between min and max
+ */
+function seededRandom(min, max, seed) {
+    // Simple seeded random function
+    const seedValue = (seed * 9301 + 49297) % 233280;
+    const rnd = seedValue / 233280.0;
+    
+    return Math.floor(min + rnd * (max - min + 1));
+}
+
+// Add this to your document ready function
+document.addEventListener('DOMContentLoaded', () => {
+    // Your existing initializations
+    // ...
+    
+    // Initialize Random Platform of the Month
+    // Slight delay to ensure all platform cards are loaded
+    setTimeout(initRandomPlatformOfMonth, 100);
+});
+
+
+
+
+
+
+
 /**
  * Accordion functionality
  */
