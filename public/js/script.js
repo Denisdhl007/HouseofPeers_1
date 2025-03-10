@@ -17,60 +17,118 @@ document.addEventListener('DOMContentLoaded', () => {
     initPlatformAnimation();
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Enhanced Platform Animation for Hero Section
- * Creates a refined animation with platform logos floating like balloons
+ * Animation de ballons blancs avec rotation de noms d'entreprise - Version corrigée
  */
 function initPlatformAnimation() {
-    // Target the hero-image div
-    const heroImageDiv = document.querySelector('.hero-image');
-    if (!heroImageDiv) return;
+    // D'après la capture d'écran, on doit cibler le bon conteneur
+    // 1. Essayons d'abord de trouver le div.hero-image existant
+    let heroImageDiv = document.querySelector('.hero-image');
     
-    // Add a background gradient layer
-    const bgLayer = document.createElement('div');
-    bgLayer.className = 'hero-animation-background';
-    heroImageDiv.appendChild(bgLayer);
+    // 2. S'il n'existe pas, cherchons un autre conteneur approprié
+    if (!heroImageDiv) {
+        // Chercher le container dans la section hero
+        const heroContainer = document.querySelector('.hero .container');
+        
+        if (heroContainer) {
+            // Vérifier si un div pour l'animation existe déjà
+            heroImageDiv = heroContainer.querySelector('.hero-animation-container');
+            
+            // Sinon, créons un nouveau conteneur pour notre animation
+            if (!heroImageDiv) {
+                heroImageDiv = document.createElement('div');
+                heroImageDiv.className = 'hero-image';
+                heroImageDiv.style.width = '50%';  // Définir la largeur
+                heroImageDiv.style.height = '400px';  // Définir la hauteur
+                heroImageDiv.style.position = 'relative'; // Position relative pour le contenu absolu
+                
+                // Trouver où insérer le div (après hero-content ou à la fin du container)
+                const heroContent = heroContainer.querySelector('.hero-content');
+                if (heroContent) {
+                    heroContent.after(heroImageDiv);
+                } else {
+                    heroContainer.appendChild(heroImageDiv);
+                }
+            }
+        }
+    }
     
-    // Create canvas element
+    // Si nous n'avons toujours pas de conteneur, arrêtons
+    if (!heroImageDiv) {
+        console.warn("Impossible de trouver ou créer un conteneur pour l'animation des ballons");
+        return;
+    }
+    
+    // Assurer que le conteneur a une position et une taille appropriées
+    heroImageDiv.style.overflow = 'visible';
+    if (!heroImageDiv.style.position || heroImageDiv.style.position === 'static') {
+        heroImageDiv.style.position = 'relative';
+    }
+    
+    // Créer le canvas à la taille du conteneur
     const canvas = document.createElement('canvas');
     canvas.className = 'platform-animation';
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.style.display = 'block';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.zIndex = '1';
     
-    // Append the canvas to our container
+    // Vider et ajouter le canvas au conteneur
+    heroImageDiv.innerHTML = '';
     heroImageDiv.appendChild(canvas);
     
-    // Platform image paths - Fixed to use correct relative paths
-    const platformImages = [
-        './public/assets/platforms/stake.png',
-        './public/assets/platforms/rendity.png',
-        './public/assets/platforms/bricks.png',
-        './public/assets/platforms/brxs.png',
-        './public/assets/platforms/moniwan.png',
-        './public/assets/platforms/la_premiere_brique.png',
-        './public/assets/platforms/corum.png',
-        './public/assets/platforms/mintos.png',
-        './public/assets/platforms/revolut.png',
-        './public/assets/platforms/splint_invest.png',
-        './public/assets/platforms/nexo.png',
-        './public/assets/platforms/lendermarket.png',
-        './public/assets/platforms/swaper.png',
-        './public/assets/platforms/goparity.png'
-    ];
+    // Get platform names from the DOM
+    let platformNames = [];
+    document.querySelectorAll('.platform-card .platform-title').forEach(titleElement => {
+        platformNames.push(titleElement.textContent.trim());
+    });
+
+    // Add some default platforms if none found in DOM
+    if (platformNames.length === 0) {
+        platformNames.push(
+            'STAKE', 'RENDITY', 'BRICKS', 'BRXS', 'MONIWAN', 
+            'CORUM', 'MINTOS', 'REVOLUT', 'GOPARITY', 'NEXO',
+            'SPLINT', 'KONVI', 'ECOTREE', 'N26', 'SWAPER'
+        );
+    }
     
     // Set up canvas context and sizing
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     let balloons = [];
     
+    // Number of visible balloons
+    const VISIBLE_BALLOONS = 5;
+    
     // Resize function to handle responsive behavior
     function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
+        // Get the actual dimensions of the container
+        const rect = heroImageDiv.getBoundingClientRect();
+        
+        // Set canvas dimensions to match container
         canvas.width = rect.width;
         canvas.height = rect.height;
         
-        // Recalculate circle size based on new dimensions
+        // Log sizes for debugging
+        console.log("Canvas resized to:", canvas.width, "x", canvas.height);
+        
+        // Recalculate sizes based on new dimensions
         initAnimation();
     }
     
@@ -81,264 +139,263 @@ function initPlatformAnimation() {
             cancelAnimationFrame(animationFrameId);
         }
         
-        // Set up the animation area
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = Math.min(canvas.width, canvas.height) / 2.2; // Boundary radius
-        
         // Clear existing balloons
         balloons = [];
         
-        // Load all images first
-        const imagePromises = platformImages.map((src, index) => {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                    resolve(img);
-                };
-                img.onerror = (error) => {
-                    console.error(`Failed to load image: ${src}`, error);
-                    // Try again with absolute path as fallback
-                    const fallbackImg = new Image();
-                    fallbackImg.onload = () => {
-                        resolve(fallbackImg);
-                    };
-                    fallbackImg.onerror = () => {
-                        reject(new Error(`Failed to load image: ${src}`));
-                    };
-                    fallbackImg.src = src.replace('./public/', '/');
-                };
-                img.src = src;
-            });
-        });
+        // Create a limited number of balloons
+        const numBalloons = Math.min(VISIBLE_BALLOONS, platformNames.length);
         
-        Promise.all(imagePromises)
-            .then(images => {
-                // Create balloons with loaded images
-                images.forEach((img, index) => {
-                    // More distributed starting positions
-                    const angle = (index / images.length) * Math.PI * 2;
-                    const distance = radius * 0.6 * Math.random() + 0.2 * radius;
-                    
-                    balloons.push(new Balloon(
-                        img, 
-                        centerX + distance * Math.cos(angle),
-                        centerY + distance * Math.sin(angle),
-                        centerX,
-                        centerY,
-                        radius
-                    ));
-                });
-                
-                // Start the animation
-                animate();
-            })
-            .catch(error => {
-                console.error('Error loading platform images:', error);
-                // Fallback: Create colored circles if images fail to load
-                for (let i = 0; i < 12; i++) {
-                    const angle = (i / 12) * Math.PI * 2;
-                    const distance = radius * 0.6 * Math.random() + 0.2 * radius;
-                    
-                    balloons.push(new Balloon(
-                        null, 
-                        centerX + distance * Math.cos(angle),
-                        centerY + distance * Math.sin(angle),
-                        centerX,
-                        centerY,
-                        radius
-                    ));
-                }
-                animate();
-            });
+        // Calculate canvas dimensions and anchor point
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const anchorY = canvasHeight; // Bottom of the canvas for the anchor points
+        
+        // Distribute balloons evenly across the width
+        const spacing = canvasWidth / (numBalloons + 1);
+        
+        for (let i = 0; i < numBalloons; i++) {
+            // Calculate anchor position (evenly spaced along bottom)
+            const anchorX = spacing * (i + 1);
+            
+            // Create balloon with different heights, swing speeds, and rotation speeds
+            const height = canvasHeight * (0.4 + Math.random() * 0.4); // Random height 40-80% of canvas
+            const swingFrequency = 0.3 + Math.random() * 0.6; // Different swing speeds (slower)
+            const swingAmplitude = 20 + Math.random() * 30; // Different swing amplitudes (reduced)
+            const rotationSpeed = 0.1 + Math.random() * 0.2; // Different rotation speeds (slower)
+            
+            // Create the balloon
+            balloons.push(new Balloon(
+                platformNames,
+                anchorX,
+                anchorY,
+                height,
+                swingFrequency,
+                swingAmplitude,
+                rotationSpeed,
+                i // Starting platform index offset for variety
+            ));
+        }
+        
+        // Start the animation
+        animate(0);
     }
     
-    // Enhanced Balloon class (previously Ball)
+    // Balloon class
     class Balloon {
-        constructor(image, x, y, centerX, centerY, boundaryRadius) {
-            this.image = image;
-            this.x = x;
-            this.y = y;
-            this.centerX = centerX;
-            this.centerY = centerY;
-            this.boundaryRadius = boundaryRadius;
+        constructor(platforms, anchorX, anchorY, stringLength, swingFrequency, swingAmplitude, rotationSpeed, startOffset) {
+            this.platforms = platforms;
             
-            // Smaller, smoother velocities
-            this.dx = (Math.random() - 0.5) * 0.7; // Reduced speed
-            this.dy = (Math.random() - 0.5) * 0.7;
+            // Anchor point (bottom of the string)
+            this.anchorX = anchorX;
+            this.anchorY = anchorY;
             
-            // Size based on screen size
-            this.radius = image ? 
-                Math.min(35, Math.max(25, canvas.width / 25)) : 
-                Math.min(25, Math.max(15, canvas.width / 30));
+            // Balloon properties
+            this.stringLength = stringLength;
+            this.currentPlatformIndex = (startOffset * 3) % platforms.length; // Offset to start with different platforms
+            this.swingPhase = Math.random() * Math.PI * 2; // Random starting phase
+            this.swingFrequency = swingFrequency; // How fast it swings
+            this.swingAmplitude = swingAmplitude; // How wide it swings
             
-            // Balloon styling
+            // Rotation properties for the 3D effect
+            this.rotationPhase = Math.random() * Math.PI * 2; // Random starting rotation
+            this.rotationSpeed = rotationSpeed; // How fast it rotates
+            
+            // Calculate balloon position based on string length and angle
+            this.x = this.anchorX;
+            this.y = this.anchorY - this.stringLength;
+            
+            // Balloon size (proportional to string length but with limits)
+            this.radius = Math.min(50, Math.max(35, stringLength / 10));
+            
+            // Visual properties
+            this.color = '#ffffff';
+            this.stringColor = 'rgba(0, 0, 0, 0.6)';
+            this.stringWidth = 1.5;
             this.shadow = {
-                color: 'rgba(0,0,0,0.15)',
-                offsetX: 2,
-                offsetY: 4,
-                blur: 5
+                color: 'rgba(0, 0, 0, 0.15)',
+                offsetX: 3,
+                offsetY: 6,
+                blur: 8
             };
             
-            // For fallback colored circles
-            this.color = image ? null : `hsl(${Math.random() * 360}, 85%, 75%)`;
+            // Side selection for name display (front/back)
+            this.currentSide = 0; // 0 = front, 1 = back
+            this.nextChangeTime = 3 + Math.random() * 2; // Random time to first flip
+            this.changeTimePassed = 0;
             
-            // Add slight rotation for dynamic feel
-            this.rotation = 0;
-            this.rotationSpeed = (Math.random() - 0.5) * 0.02; // Slower rotation
+            // Different platforms on each side
+            this.frontPlatformIndex = this.currentPlatformIndex;
+            this.backPlatformIndex = (this.currentPlatformIndex + Math.floor(platforms.length / 2)) % platforms.length;
             
-            // Add subtle floating effect
-            this.floatOffset = 0;
-            this.floatSpeed = 0.01 + Math.random() * 0.01;
-            this.floatAmplitude = 0.5 + Math.random() * 1.5;
-            
-            // Optional: Add slight pulsing effect
-            this.pulse = 0;
-            this.pulseSpeed = 0.02 + Math.random() * 0.02;
-            this.pulseAmplitude = 0.05 + Math.random() * 0.1;
+            // Balloon tilt for realistic swinging
+            this.tiltAngle = 0;
         }
         
-        update() {
-            // Update floating effect
-            this.floatOffset += this.floatSpeed;
-            this.pulse += this.pulseSpeed;
+        update(deltaTime) {
+            // Update swing phase
+            this.swingPhase += this.swingFrequency * deltaTime;
             
-            // Calculate floating movement
-            const floatingY = Math.sin(this.floatOffset) * this.floatAmplitude;
-            const pulseScale = 1 + Math.sin(this.pulse) * this.pulseAmplitude;
+            // Calculate the current swing angle
+            const swingAngle = Math.sin(this.swingPhase) * (this.swingAmplitude * Math.PI / 180);
             
-            // Move the balloon (slower movement)
-            this.x += this.dx;
-            this.y += this.dy + floatingY * 0.1;
+            // Update tilt angle based on swing motion (balloon tilts into the swing direction)
+            this.tiltAngle = Math.sin(this.swingPhase + Math.PI / 2) * 0.15; // Slight tilt for realism
             
-            // Rotate the image
-            this.rotation += this.rotationSpeed;
+            // Calculate new balloon position with the pendulum motion
+            this.x = this.anchorX + Math.sin(swingAngle) * this.stringLength;
+            this.y = this.anchorY - Math.cos(swingAngle) * this.stringLength;
             
-            // Calculate distance from center
-            const distFromCenter = Math.hypot(this.x - this.centerX, this.y - this.centerY);
+            // Update rotation for 3D effect
+            this.rotationPhase += this.rotationSpeed * deltaTime;
             
-            // Soft boundary approach - gradually steer back when approaching the boundary
-            if (distFromCenter > this.boundaryRadius * 0.7) {
-                // Calculate vector toward center
-                const towardCenterX = (this.centerX - this.x) / distFromCenter;
-                const towardCenterY = (this.centerY - this.y) / distFromCenter;
+            // Track time to change the displayed platform names
+            this.changeTimePassed += deltaTime;
+            if (this.changeTimePassed >= this.nextChangeTime) {
+                // Update platform indices
+                this.frontPlatformIndex = (this.frontPlatformIndex + 1) % this.platforms.length;
+                this.backPlatformIndex = (this.backPlatformIndex + 1) % this.platforms.length;
                 
-                // Strength of correction increases as we approach the boundary
-                const correctionStrength = Math.min(0.05, (distFromCenter - this.boundaryRadius * 0.7) / (this.boundaryRadius * 0.3) * 0.05);
-                
-                // Apply soft correction
-                this.dx += towardCenterX * correctionStrength;
-                this.dy += towardCenterY * correctionStrength;
-                
-                // Apply slight damping for stability
-                this.dx *= 0.995;
-                this.dy *= 0.995;
+                // Reset timer and set new random change time
+                this.changeTimePassed = 0;
+                this.nextChangeTime = 3 + Math.random() * 2; // Every 3-5 seconds
             }
             
-            // Hard boundary (safety measure)
-            if (distFromCenter + this.radius >= this.boundaryRadius) {
-                // Calculate normal vector
-                const normalX = (this.x - this.centerX) / distFromCenter;
-                const normalY = (this.y - this.centerY) / distFromCenter;
-                
-                // Calculate reflection
-                const dotProduct = this.dx * normalX + this.dy * normalY;
-                this.dx -= 2 * dotProduct * normalX;
-                this.dy -= 2 * dotProduct * normalY;
-                
-                // Add a bit of friction/energy loss
-                this.dx *= 0.8;
-                this.dy *= 0.8;
-            }
-            
-            return { floatingY, pulseScale };
+            // Calculate which side is visible based on rotation
+            const normalizedRotation = ((this.rotationPhase % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+            this.currentSide = normalizedRotation < Math.PI ? 0 : 1; // Front or back
         }
         
-        draw(floatingY, pulseScale) {
-            ctx.save(); // Save the current state
+        draw(ctx) {
+            // Save the current state
+            ctx.save();
             
-            // Translate to the balloon's center, rotate, and apply pulse
+            // Draw the string
+            ctx.beginPath();
+            ctx.moveTo(this.anchorX, this.anchorY);
+            ctx.lineTo(this.x, this.y);
+            ctx.strokeStyle = this.stringColor;
+            ctx.lineWidth = this.stringWidth;
+            ctx.stroke();
+            
+            // Move to balloon position
             ctx.translate(this.x, this.y);
-            ctx.rotate(this.rotation);
-            ctx.scale(pulseScale, pulseScale);
             
-            if (this.image) {
-                // Calculate size with slight variation
-                const size = this.radius * 2;
-                
-                // Draw shadow (subtle)
-                ctx.shadowColor = this.shadow.color;
-                ctx.shadowOffsetX = this.shadow.offsetX;
-                ctx.shadowOffsetY = this.shadow.offsetY;
-                ctx.shadowBlur = this.shadow.blur;
-                
-                // Draw the platform logo with subtle balloon-like styling
-                // First draw a circle behind the logo for a balloon-like effect
-                ctx.beginPath();
-                ctx.arc(0, 0, this.radius * 0.95, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-                ctx.fill();
-                
-                // Remove shadow for the image itself
-                ctx.shadowColor = 'transparent';
-                
-                // Draw the logo image
-                ctx.drawImage(this.image, -size/2, -size/2, size, size);
-                
-                // Optional: Add a subtle highlight for balloon effect
-                ctx.beginPath();
-                ctx.arc(-this.radius * 0.3, -this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                ctx.fill();
-            } else {
-                // Fallback: draw a colored circle with balloon styling
-                
-                // Draw shadow
-                ctx.shadowColor = this.shadow.color;
-                ctx.shadowOffsetX = this.shadow.offsetX;
-                ctx.shadowOffsetY = this.shadow.offsetY;
-                ctx.shadowBlur = this.shadow.blur;
-                
-                ctx.beginPath();
-                ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                
-                // Add highlight
-                ctx.beginPath();
-                ctx.arc(-this.radius * 0.3, -this.radius * 0.3, this.radius * 0.3, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                ctx.fill();
-            }
+            // Apply tilt for realistic swinging
+            ctx.rotate(this.tiltAngle);
             
-            ctx.restore(); // Restore the state
+            // Calculate 3D scale factor based on rotation (simulating perspective)
+            const rotationVisibility = Math.abs(Math.cos(this.rotationPhase));
+            const scaleX = 0.6 + 0.4 * rotationVisibility; // Scale between 60-100% based on rotation
+            
+            // Apply the scale transformation
+            ctx.scale(scaleX, 1);
+            
+            // Apply shadow
+            ctx.shadowColor = this.shadow.color;
+            ctx.shadowOffsetX = this.shadow.offsetX;
+            ctx.shadowOffsetY = this.shadow.offsetY;
+            ctx.shadowBlur = this.shadow.blur;
+            
+            // Draw the balloon (oval shape)
+            ctx.beginPath();
+            ctx.ellipse(0, 0, this.radius, this.radius * 1.2, 0, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            
+            // Draw the knot at the bottom of the balloon
+            ctx.beginPath();
+            ctx.arc(0, this.radius, 4, 0, Math.PI * 2);
+            ctx.fillStyle = '#f0f0f0';
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.lineWidth = 0.5;
+            ctx.fill();
+            ctx.stroke();
+            
+            // Remove shadow for the text
+            ctx.shadowColor = 'transparent';
+            
+            // Determine which text to display based on visible side
+            const platformText = this.currentSide === 0 
+                ? this.platforms[this.frontPlatformIndex] 
+                : this.platforms[this.backPlatformIndex];
+            
+            // Calculate optimal font size based on balloon size and text length
+            const textLength = platformText.length;
+            const maxWidth = this.radius * 1.6 * scaleX; // Account for the 3D scaling
+            let fontSize = Math.min(
+                this.radius * 0.6,
+                maxWidth / (textLength * 0.6)
+            );
+            fontSize = Math.max(12, fontSize); // Minimum font size for readability
+            
+            // Draw platform name with opacity based on rotation for 3D effect
+            ctx.fillStyle = `rgba(10, 30, 64, ${0.7 + 0.3 * rotationVisibility})`; // Text gets lighter when balloon turns
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = `bold ${fontSize}px 'Nobile', sans-serif`;
+            
+            // Draw text slightly above center for better balloon aesthetics
+            ctx.fillText(platformText, 0, -this.radius * 0.1);
+            
+            // Add a highlight on the balloon for 3D effect
+            const highlightX = -this.radius * 0.3;
+            const highlightY = -this.radius * 0.4;
+            const highlightRadiusX = this.radius * 0.4;
+            const highlightRadiusY = this.radius * 0.3;
+            
+            ctx.beginPath();
+            ctx.ellipse(highlightX, highlightY, highlightRadiusX, highlightRadiusY, -Math.PI/4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.fill();
+            
+            // Restore the original state
+            ctx.restore();
         }
     }
     
+    // Animation timing variables
+    let lastTime = 0;
+    
     // Animation loop
-    function animate() {
+    function animate(currentTime) {
+        // Convert to seconds
+        currentTime *= 0.001;
+        const deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+        
+        // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw a subtle radial gradient background
-        const gradient = ctx.createRadialGradient(
-            canvas.width/2, canvas.height/2, 10,
-            canvas.width/2, canvas.height/2, Math.min(canvas.width, canvas.height)/2
-        );
-        gradient.addColorStop(0, 'rgba(10, 30, 64, 0)');  // Center color (transparent)
-        gradient.addColorStop(1, 'rgba(10, 30, 64, 0.05)'); // Edge color (slightly visible)
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         // Update and draw all balloons
         balloons.forEach(balloon => {
-            const { floatingY, pulseScale } = balloon.update();
-            balloon.draw(floatingY, pulseScale);
+            balloon.update(deltaTime);
+            balloon.draw(ctx);
         });
         
         // Continue animation
         animationFrameId = requestAnimationFrame(animate);
     }
+    
+    // Add a debug button to manually test the animation (will be removed in production)
+    function addDebugButton() {
+        const debugBtn = document.createElement('button');
+        debugBtn.textContent = 'Réinitialiser l\'animation';
+        debugBtn.style.position = 'fixed';
+        debugBtn.style.zIndex = '9999';
+        debugBtn.style.bottom = '10px';
+        debugBtn.style.right = '10px';
+        debugBtn.style.padding = '5px 10px';
+        debugBtn.style.background = '#1A3A6A';
+        debugBtn.style.color = 'white';
+        debugBtn.style.border = 'none';
+        debugBtn.style.borderRadius = '4px';
+        debugBtn.style.cursor = 'pointer';
+        debugBtn.onclick = resizeCanvas;
+        document.body.appendChild(debugBtn);
+    }
+    
+    // Uncomment this line to add a debug button during development
+    // addDebugButton();
     
     // Handle window resize
     window.addEventListener('resize', debounce(resizeCanvas, 250));
@@ -347,8 +404,15 @@ function initPlatformAnimation() {
     resizeCanvas();
     
     // Apply fade effect to hero content on scroll
-    applyHeroContentFade();
+    if (typeof applyHeroContentFade === 'function') {
+        applyHeroContentFade();
+    }
 }
+
+
+
+
+
 
 
 

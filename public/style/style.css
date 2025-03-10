@@ -1263,7 +1263,7 @@ p {
 .hero-image {
     flex: 1;
     max-width: 50%;
-    height: 500px; /* Increased height */
+    height: 800px; /* Increased height */
     display: flex;
     justify-content: flex-end;
     align-items: center;
