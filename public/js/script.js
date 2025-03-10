@@ -351,6 +351,12 @@ function initPlatformAnimation() {
 }
 
 
+
+
+
+
+
+
 /**
  * Apply fade effect to hero content on scroll (simplified from parallax)
  */
@@ -755,65 +761,309 @@ function initPlatformCards() {
 }
 
 /**
- * Search functionality
+ * Enhanced search functionality that only searches platform titles
+ * Replace your existing initSearch() function with this implementation
  */
 function initSearch() {
     const searchInput = document.getElementById('platform-search');
+    const searchSection = document.querySelector('.search-section');
     
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const platformCards = document.querySelectorAll('.platform-card');
-            
-            platformCards.forEach(card => {
-                const title = card.querySelector('.platform-title').textContent.toLowerCase();
-                const description = card.querySelector('.platform-description').textContent.toLowerCase();
+    if (!searchInput) return;
+    
+    // Create UI elements for search functionality
+    const searchWrapper = document.querySelector('.search-wrapper');
+    
+    // Create notification element
+    const searchNotification = document.createElement('div');
+    searchNotification.className = 'search-notification';
+    searchNotification.style.display = 'none';
+    
+    // Create autocomplete container
+    const autocompleteContainer = document.createElement('div');
+    autocompleteContainer.className = 'autocomplete-container';
+    
+    // Insert elements into the DOM
+    if (searchWrapper) {
+        searchWrapper.after(searchNotification);
+        searchWrapper.appendChild(autocompleteContainer);
+    }
+    
+    // Build a list of all platform titles
+    let platformData = [];
+    let platformTitles = [];
+    
+    function collectPlatformData() {
+        platformData = [];
+        platformTitles = [];
+        
+        document.querySelectorAll('.platform-card').forEach(card => {
+            const titleElement = card.querySelector('.platform-title');
+            if (titleElement) {
+                const title = titleElement.textContent.trim();
                 
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'flex';
-                    // Add a subtle highlight animation
-                    if (searchTerm !== '') {
-                        card.classList.add('search-highlight');
-                        setTimeout(() => {
-                            card.classList.remove('search-highlight');
-                        }, 1000);
+                // Add the platform data
+                platformData.push({
+                    title: title,
+                    element: card
+                });
+                
+                // Add title to searchable terms (for autocomplete)
+                platformTitles.push(title.toLowerCase());
+            }
+        });
+    }
+    
+    // Collect initial platform data
+    collectPlatformData();
+    
+    // Search functionality
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        let totalResults = 0;
+        
+        // Clear previous notification
+        searchNotification.style.display = 'none';
+        
+        // Show suggestions or hide them based on search term
+        if (searchTerm.length > 0) {
+            showSuggestions(searchTerm);
+        } else {
+            autocompleteContainer.innerHTML = '';
+            autocompleteContainer.style.display = 'none';
+        }
+        
+        // Handle empty search
+        if (searchTerm === '') {
+            // Show all cards when search is cleared
+            platformData.forEach(platform => {
+                platform.element.style.display = 'flex';
+                platform.element.classList.remove('search-highlight');
+            });
+            
+            // Remove no-results messages
+            document.querySelectorAll('.no-results').forEach(el => el.remove());
+            return;
+        }
+        
+        // Process search - only matching against platform titles
+        platformData.forEach(platform => {
+            const titleMatch = platform.title.toLowerCase().includes(searchTerm);
+            
+            if (titleMatch) {
+                platform.element.style.display = 'flex';
+                totalResults++;
+                
+                // Add a subtle highlight animation
+                platform.element.classList.add('search-highlight');
+                setTimeout(() => {
+                    platform.element.classList.remove('search-highlight');
+                }, 1000);
+            } else {
+                platform.element.style.display = 'none';
+            }
+        });
+        
+        // Check if no results were found in visible sections
+        const platformSections = document.querySelectorAll('.platforms');
+        platformSections.forEach(section => {
+            const visibleCards = Array.from(section.querySelectorAll('.platform-card')).filter(card => card.style.display !== 'none');
+            
+            const noResultsEl = section.querySelector('.no-results');
+            
+            if (visibleCards.length === 0 && searchTerm !== '') {
+                if (!noResultsEl) {
+                    const noResults = document.createElement('p');
+                    noResults.className = 'no-results';
+                    noResults.textContent = 'No platforms match your search criteria';
+                    section.querySelector('.platform-grid, .platform-preview')?.after(noResults);
+                }
+            } else if (noResultsEl) {
+                noResultsEl.remove();
+            }
+        });
+        
+        // Display search results notification
+        if (searchTerm !== '') {
+            if (totalResults > 0) {
+                searchNotification.textContent = `Found ${totalResults} platform${totalResults !== 1 ? 's' : ''} for "${searchTerm}"`;
+                searchNotification.className = 'search-notification search-success';
+            } else {
+                searchNotification.textContent = `No platforms found for "${searchTerm}"`;
+                searchNotification.className = 'search-notification search-empty';
+            }
+            searchNotification.style.display = 'block';
+            
+            // Auto-hide notification after 5 seconds
+            setTimeout(() => {
+                searchNotification.style.opacity = '0';
+                setTimeout(() => {
+                    if (searchInput.value.toLowerCase().trim() !== searchTerm) {
+                        searchNotification.style.display = 'none';
+                        searchNotification.style.opacity = '1';
                     }
+                }, 500);
+            }, 5000);
+        }
+    });
+    
+    // Function to show autocomplete suggestions
+    function showSuggestions(searchTerm) {
+        // Clear previous suggestions
+        autocompleteContainer.innerHTML = '';
+        
+        // Find matching platform titles
+        const matches = platformTitles.filter(title => 
+            title.includes(searchTerm)
+        );
+        
+        // Sort matches by relevance (starts with > contains)
+        matches.sort((a, b) => {
+            const aStartsWith = a.startsWith(searchTerm);
+            const bStartsWith = b.startsWith(searchTerm);
+            
+            if (aStartsWith && !bStartsWith) return -1;
+            if (!aStartsWith && bStartsWith) return 1;
+            
+            return 0;
+        });
+        
+        // Limit to 5 suggestions
+        const limitedMatches = matches.slice(0, 5);
+        
+        if (limitedMatches.length > 0) {
+            // Create suggestion elements
+            limitedMatches.forEach(match => {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'autocomplete-suggestion';
+                
+                // Highlight the matching part
+                const matchIndex = match.indexOf(searchTerm);
+                const beforeMatch = match.substring(0, matchIndex);
+                const matchPart = match.substring(matchIndex, matchIndex + searchTerm.length);
+                const afterMatch = match.substring(matchIndex + searchTerm.length);
+                
+                suggestion.innerHTML = `${beforeMatch}<strong>${matchPart}</strong>${afterMatch}`;
+                
+                // Add click handler
+                suggestion.addEventListener('click', () => {
+                    searchInput.value = match;
+                    autocompleteContainer.innerHTML = '';
+                    autocompleteContainer.style.display = 'none';
+                    // Trigger search with the selected term
+                    searchInput.dispatchEvent(new Event('input'));
+                });
+                
+                autocompleteContainer.appendChild(suggestion);
+            });
+            
+            autocompleteContainer.style.display = 'block';
+        } else {
+            autocompleteContainer.style.display = 'none';
+        }
+    }
+    
+    // Handle keyboard navigation for autocomplete
+    searchInput.addEventListener('keydown', (e) => {
+        const suggestions = autocompleteContainer.querySelectorAll('.autocomplete-suggestion');
+        if (!suggestions.length) return;
+        
+        // Find currently selected suggestion
+        const currentSelected = autocompleteContainer.querySelector('.selected');
+        let currentIndex = -1;
+        
+        if (currentSelected) {
+            for (let i = 0; i < suggestions.length; i++) {
+                if (suggestions[i] === currentSelected) {
+                    currentIndex = i;
+                    break;
+                }
+            }
+        }
+        
+        // Handle arrow keys, enter, and escape
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                if (currentIndex < suggestions.length - 1) {
+                    if (currentSelected) currentSelected.classList.remove('selected');
+                    suggestions[currentIndex + 1].classList.add('selected');
                 } else {
-                    card.style.display = 'none';
+                    if (currentSelected) currentSelected.classList.remove('selected');
+                    suggestions[0].classList.add('selected');
                 }
-            });
-            
-            // Check if no results were found in visible sections
-            const platformSections = document.querySelectorAll('.platforms');
-            platformSections.forEach(section => {
-                const visibleCards = Array.from(section.querySelectorAll('.platform-card')).filter(card => card.style.display !== 'none');
+                break;
                 
-                const noResultsEl = section.querySelector('.no-results');
-                
-                if (visibleCards.length === 0 && searchTerm !== '') {
-                    if (!noResultsEl) {
-                        const noResults = document.createElement('p');
-                        noResults.className = 'no-results';
-                        noResults.textContent = 'No platforms match your search criteria';
-                        section.querySelector('.platform-grid, .platform-preview')?.after(noResults);
-                    }
-                } else if (noResultsEl) {
-                    noResultsEl.remove();
+            case 'ArrowUp':
+                e.preventDefault();
+                if (currentIndex > 0) {
+                    if (currentSelected) currentSelected.classList.remove('selected');
+                    suggestions[currentIndex - 1].classList.add('selected');
+                } else {
+                    if (currentSelected) currentSelected.classList.remove('selected');
+                    suggestions[suggestions.length - 1].classList.add('selected');
                 }
-            });
+                break;
+                
+            case 'Enter':
+                if (currentSelected) {
+                    e.preventDefault();
+                    searchInput.value = currentSelected.textContent;
+                    autocompleteContainer.innerHTML = '';
+                    autocompleteContainer.style.display = 'none';
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+                break;
+                
+            case 'Escape':
+                autocompleteContainer.innerHTML = '';
+                autocompleteContainer.style.display = 'none';
+                searchInput.value = '';
+                // Trigger input event to update results
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.blur();
+                break;
+        }
+    });
+    
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchWrapper.contains(e.target)) {
+            autocompleteContainer.style.display = 'none';
+        }
+    });
+    
+    // Refresh platform data if content changes
+    document.addEventListener('DOMContentLoaded', collectPlatformData);
+    window.addEventListener('load', collectPlatformData);
+}
+
+
+/**
+ * Automatically updates the year in the copyright footer
+ * This script can be included in your main JavaScript file
+ */
+function updateCopyrightYear() {
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+    
+    // Find all elements that should display the year
+    const yearElements = document.querySelectorAll('.copyright-year');
+    
+    // If no specific elements with .copyright-year class are found, look for the footer year element by ID
+    if (yearElements.length === 0) {
+        const footerYearEl = document.getElementById('current-year');
+        if (footerYearEl) {
+            footerYearEl.textContent = currentYear.toString();
+        }
+    } else {
+        // Update all elements with the .copyright-year class
+        yearElements.forEach(element => {
+            element.textContent = currentYear.toString();
         });
     }
 }
-
-/**
- * Update copyright year
- */
-function updateCopyrightYear() {
-    const yearEl = document.getElementById('current-year');
-    if (yearEl) {
-        yearEl.textContent = new Date().getFullYear();
-    }
-}
+// Run this when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', updateCopyrightYear);
 
 /**
  * Add stripe effect to platform cards (inspired by Kappa jersey pattern)
