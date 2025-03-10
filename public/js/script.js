@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /**
- * Enhanced balloon animation with improved knot realism, 
- * multi-line text for long company names, and cord attached directly to knot
+ * Enhanced balloon animation with improved cord attachment and realistic knot
+ * The cord now connects properly to the knot and follows the balloon's movement
  */
 function initPlatformAnimation() {
     // Find the container for the animation
@@ -276,7 +276,7 @@ function initPlatformAnimation() {
         animate(0);
     }
     
-    // Balloon class with improved realism
+    // Balloon class with improved realism and string attachment
     class Balloon {
         constructor(anchorX, anchorY, stringLength, swingFrequency, swingAmplitude, initialName, changeInterval) {
             // Anchor point (bottom of the string)
@@ -349,7 +349,7 @@ function initPlatformAnimation() {
             const combinedAngle = swingAngle + secondaryAngle;
             
             // Update tilt angle based on swing motion
-            this.tiltAngle = Math.sin(this.swingPhase + Math.PI / 2) * 0.08; // Slightly increased tilt
+            this.tiltAngle = Math.sin(this.swingPhase + Math.PI / 2) * 0.1; // Slightly increased tilt
             
             // Calculate new balloon position with increased horizontal movement
             // Increase the multiplier from 0.15 to 0.25 for more horizontal movement
@@ -357,9 +357,10 @@ function initPlatformAnimation() {
             this.y = this.anchorY - Math.cos(combinedAngle) * this.stringLength;
             
             // Calculate knot position - it's at the bottom of the balloon
-            this.knotX = this.x;
-            this.knotY = this.y + this.radius;
-            this.knotSize = Math.max(4, this.radius * 0.06);
+            // The knot position will include the tilt effect
+            const knotOffset = this.radius + this.knotSize * 0.5;
+            this.knotX = this.x + Math.sin(this.tiltAngle) * knotOffset;
+            this.knotY = this.y + Math.cos(this.tiltAngle) * knotOffset;
             
             // Ensure balloon stays within canvas boundaries
             const boundaryMargin = this.radius * 1.2;
@@ -464,7 +465,7 @@ function initPlatformAnimation() {
             ctx.shadowColor = 'transparent';
             
             // Draw an improved balloon knot/tie at the bottom
-            const knotInfo = this.drawBalloonKnot(ctx);
+            const knotPosition = this.drawBalloonKnot(ctx);
             
             // Save balloon state to return to after drawing text
             ctx.save();
@@ -540,19 +541,22 @@ function initPlatformAnimation() {
             // Restore to position before balloon drawing
             ctx.restore();
             
-            // Now draw the string from the anchor point to the knot
-            // This ensures the string is properly connected to the knot
-            const rotatedKnotX = this.knotX;
-            const rotatedKnotY = this.knotY;
+            // Calculate the actual position of the knot in world coordinates
+            // This takes into account the balloon's position, tilt, and the knot's offset
+            const worldKnotX = this.x + Math.sin(this.tiltAngle) * (this.radius + this.knotSize * 0.5);
+            const worldKnotY = this.y + Math.cos(this.tiltAngle) * (this.radius + this.knotSize * 0.5);
             
+            // Now draw the string from the anchor point to the knot position
+            // The string connects directly to the knot
             ctx.beginPath();
             ctx.moveTo(this.anchorX, this.anchorY);
             
             // Draw a curved string that connects to the knot position
-            const controlPointX = this.anchorX + (rotatedKnotX - this.anchorX) * 0.5;
-            const controlPointY = this.anchorY - (this.anchorY - rotatedKnotY) * 0.2;
+            // The control point creates a natural curve in the string
+            const controlPointX = this.anchorX + (worldKnotX - this.anchorX) * 0.5;
+            const controlPointY = this.anchorY - (this.anchorY - worldKnotY) * 0.2;
             
-            ctx.quadraticCurveTo(controlPointX, controlPointY, rotatedKnotX, rotatedKnotY);
+            ctx.quadraticCurveTo(controlPointX, controlPointY, worldKnotX, worldKnotY);
             
             // Style the string with gold color
             ctx.strokeStyle = this.stringColor;
