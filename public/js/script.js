@@ -18,22 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
- * Enhanced balloon animation with improved cord attachment and realistic knot
- * The cord now connects properly to the knot and follows the balloon's movement
+ * Enhanced balloon animation with improved cord-knot connection and subtly clickable balloons
  */
 function initPlatformAnimation() {
     // Find the container for the animation
@@ -86,24 +72,38 @@ function initPlatformAnimation() {
     canvas.style.left = '0';
     canvas.style.zIndex = '1';
     
+    // Set cursor to pointer to indicate clickable area
+    canvas.style.cursor = 'pointer';
+    
     // Clear and add canvas to container
     heroImageDiv.innerHTML = '';
     heroImageDiv.appendChild(canvas);
     
     // Get platform names from the DOM - collecting all available platforms
-    let platformNames = [];
-    document.querySelectorAll('.platform-card .platform-title').forEach(titleElement => {
-        platformNames.push(titleElement.textContent.trim());
+    let platformData = [];
+    document.querySelectorAll('.platform-card').forEach(card => {
+        const titleElement = card.querySelector('.platform-title');
+        if (titleElement) {
+            platformData.push({
+                name: titleElement.textContent.trim(),
+                element: card
+            });
+        }
     });
 
-    // Add some default platforms if none found in DOM
-    if (platformNames.length === 0) {
-        platformNames.push(
+    // Default platform data if none found in DOM
+    if (platformData.length === 0) {
+        const defaultNames = [
             'STAKE', 'RENDITY', 'BRICKS', 'BRXS', 'MONIWAN', 
             'CORUM', 'MINTOS', 'REVOLUT', 'GOPARITY', 'NEXO',
-            'SPLINT INVEST', 'KONVI', 'TIMELESS', 'LA PREMIÈRE BRIQUE'
-        );
+            'SPLINT INVEST', 'KONVI', 'TIMELESS', 'ECOTREE'
+        ];
+        
+        platformData = defaultNames.map(name => ({ name, element: null }));
     }
+    
+    // Extract just the platform names
+    let platformNames = platformData.map(item => item.name);
     
     // Convert platform names to Title Case (first letter uppercase, rest lowercase)
     platformNames = platformNames.map(name => {
@@ -111,6 +111,12 @@ function initPlatformAnimation() {
             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         ).join(' ');
     });
+    
+    // Update platformData with formatted names
+    platformData = platformData.map((item, index) => ({
+        ...item,
+        name: platformNames[index]
+    }));
     
     // Set up canvas context and sizing
     const ctx = canvas.getContext('2d');
@@ -197,28 +203,27 @@ function initPlatformAnimation() {
         canvas.width = rect.width;
         canvas.height = rect.height;
         
-        // Log sizes for debugging
-        console.log("Canvas resized to:", canvas.width, "x", canvas.height);
-        
         // Recalculate sizes based on new dimensions
         initAnimation();
     }
 
-    // Get a unique company name (not currently displayed)
-    function getUniqueCompanyName() {
+    // Get a unique company data (not currently displayed)
+    function getUniqueCompanyData() {
         // Filter out companies that are already displayed
-        const availableCompanies = platformNames.filter(name => !displayedCompanies.has(name));
+        const availablePlatforms = platformData.filter(item => !displayedCompanies.has(item.name));
         
         // If we've used all companies or somehow have none available, reset the tracking
-        if (availableCompanies.length === 0) {
+        if (availablePlatforms.length === 0) {
             // Pick a random company to free up
-            const companyToFree = Array.from(displayedCompanies)[Math.floor(Math.random() * displayedCompanies.size)];
-            displayedCompanies.delete(companyToFree);
-            return companyToFree;
+            const companyNameToFree = Array.from(displayedCompanies)[Math.floor(Math.random() * displayedCompanies.size)];
+            displayedCompanies.delete(companyNameToFree);
+            
+            // Find and return the company data
+            return platformData.find(item => item.name === companyNameToFree) || platformData[0];
         }
         
         // Select random company from available ones
-        return availableCompanies[Math.floor(Math.random() * availableCompanies.length)];
+        return availablePlatforms[Math.floor(Math.random() * availablePlatforms.length)];
     }
     
     // Initialize the animation parameters
@@ -233,7 +238,7 @@ function initPlatformAnimation() {
         displayedCompanies.clear();
         
         // Create a limited number of balloons
-        const numBalloons = Math.min(VISIBLE_BALLOONS, platformNames.length);
+        const numBalloons = Math.min(VISIBLE_BALLOONS, platformData.length);
         
         // Calculate canvas dimensions and anchor point
         const canvasWidth = canvas.width;
@@ -247,18 +252,17 @@ function initPlatformAnimation() {
             const anchorX = spacing * (i + 1);
             const anchorY = canvasHeight; // Bottom of the canvas
             
-            // Much more vertical variation - balloons at significantly different heights
             // Different heights for more varied appearance (30-80% of canvas height)
             const heightPercentage = 0.3 + Math.random() * 0.5;
             const stringLength = canvasHeight * heightPercentage;
             
-            // INCREASED horizontal movement with higher amplitudes
-            const swingFrequency = 0.07 + Math.random() * 0.1; // Slightly slower for more pendulum effect
-            const swingAmplitude = 8 + Math.random() * 12; // Increased swing amplitudes for more horizontal movement
+            // Horizontal movement with higher amplitudes
+            const swingFrequency = 0.05 + Math.random() * 0.08; // Slower for more natural pendulum effect
+            const swingAmplitude = 8 + Math.random() * 12; // Swing amplitudes for horizontal movement
             
-            // Get a unique company name for this balloon
-            const companyName = getUniqueCompanyName();
-            displayedCompanies.add(companyName);
+            // Get a unique company data
+            const companyData = getUniqueCompanyData();
+            displayedCompanies.add(companyData.name);
             
             // Create the balloon
             balloons.push(new Balloon(
@@ -267,18 +271,59 @@ function initPlatformAnimation() {
                 stringLength,
                 swingFrequency,
                 swingAmplitude,
-                companyName,
+                companyData,
                 10 + Math.random() * 7 // Longer time between name changes (10-17 seconds)
             ));
         }
         
         // Start the animation
         animate(0);
+        
+        // Add click event listener to canvas
+        canvas.addEventListener('click', handleCanvasClick);
+        canvas.addEventListener('mousemove', handleMouseMove);
     }
     
-    // Balloon class with improved realism and string attachment
+    // Handle clicks on the canvas
+    function handleCanvasClick(event) {
+        // Get the click coordinates relative to the canvas
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        // Check if any balloon was clicked
+        for (const balloon of balloons) {
+            if (balloon.isPointInside(x, y)) {
+                balloon.handleClick();
+                return; // Exit after handling one click
+            }
+        }
+    }
+    
+    // Handle mouse movements for hover effects
+    function handleMouseMove(event) {
+        // Get the mouse coordinates relative to the canvas
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        let anyHovered = false;
+        
+        // Check hover state for all balloons
+        for (const balloon of balloons) {
+            const isHovered = balloon.checkHover(x, y);
+            if (isHovered) {
+                anyHovered = true;
+            }
+        }
+        
+        // Update cursor style based on hover state
+        canvas.style.cursor = anyHovered ? 'pointer' : 'default';
+    }
+    
+    // Balloon class with cord-driven physics and improved clickability
     class Balloon {
-        constructor(anchorX, anchorY, stringLength, swingFrequency, swingAmplitude, initialName, changeInterval) {
+        constructor(anchorX, anchorY, stringLength, swingFrequency, swingAmplitude, companyData, changeInterval) {
             // Anchor point (bottom of the string)
             this.anchorX = anchorX;
             this.anchorY = anchorY;
@@ -289,17 +334,13 @@ function initPlatformAnimation() {
             this.swingFrequency = swingFrequency; // How fast it swings
             this.swingAmplitude = swingAmplitude; // How wide it swings
             
-            // Calculate balloon position based on string length and angle
-            this.x = this.anchorX;
-            this.y = this.anchorY - this.stringLength;
-            
-            // Set initial company name and calculate balloon size based on text length
-            this.currentName = initialName;
-            this.radius = calculateBalloonRadius(initialName);
+            // Company data
+            this.currentCompanyData = companyData;
+            this.radius = calculateBalloonRadius(companyData.name);
             
             // Split text into lines if needed
             this.maxLineLength = 10; // Maximum characters per line
-            this.currentLines = splitTextIntoLines(initialName, this.maxLineLength);
+            this.currentLines = splitTextIntoLines(companyData.name, this.maxLineLength);
             
             // Visual properties
             this.color = '#ffffff';
@@ -313,17 +354,24 @@ function initPlatformAnimation() {
             };
             
             // Company name display and transition
-            this.nextName = '';
+            this.nextCompanyData = null;
             this.nextLines = [];
             this.nextRadius = this.radius; // Will be recalculated when name changes
             this.textOpacity = 1;
             this.isChangingName = false;
             this.fadeDirection = 0; // 0 = stable, 1 = fading out, 2 = fading in
             
-            // Knot position (will be calculated during update)
-            this.knotX = 0;
-            this.knotY = 0;
+            // Knot position and properties
             this.knotSize = Math.max(4, this.radius * 0.06);
+            
+            // KEY CHANGE: The knot is now treated as part of the string
+            // These variables track the positions for proper connection
+            this.knotX = 0; // Knot position X in world coordinates
+            this.knotY = 0; // Knot position Y in world coordinates
+            
+            // Balloon position will be calculated based on knot position
+            this.x = 0;
+            this.y = 0;
             
             // Timer for company name changes
             this.changeInterval = changeInterval; // Seconds between changes
@@ -334,8 +382,12 @@ function initPlatformAnimation() {
             
             // Secondary movement variables - adds subtle motion
             this.secondaryPhase = Math.random() * Math.PI * 2;
-            this.secondaryFrequency = 0.05 + Math.random() * 0.1;
-            this.secondaryAmplitude = 2 + Math.random() * 4;
+            this.secondaryFrequency = 0.03 + Math.random() * 0.07; // Slower for more natural movement
+            this.secondaryAmplitude = 2 + Math.random() * 3;
+            
+            // Interactive state
+            this.isHovered = false;
+            this.clickable = true; // The balloon is clickable
         }
         
         update(deltaTime) {
@@ -348,25 +400,41 @@ function initPlatformAnimation() {
             const secondaryAngle = Math.sin(this.secondaryPhase) * (this.secondaryAmplitude * Math.PI / 180);
             const combinedAngle = swingAngle + secondaryAngle;
             
-            // Update tilt angle based on swing motion
-            this.tiltAngle = Math.sin(this.swingPhase + Math.PI / 2) * 0.1; // Slightly increased tilt
+            // CRITICAL CHANGE: First calculate the knot position as the end of the string
+            const horizontalFactor = 0.25; // Controls how much horizontal movement
+            this.knotX = this.anchorX + Math.sin(combinedAngle) * this.stringLength * horizontalFactor;
             
-            // Calculate new balloon position with increased horizontal movement
-            // Increase the multiplier from 0.15 to 0.25 for more horizontal movement
-            this.x = this.anchorX + Math.sin(combinedAngle) * this.stringLength * 0.25;
-            this.y = this.anchorY - Math.cos(combinedAngle) * this.stringLength;
+            // String length from anchor to knot determines the knot's Y position
+            const effectiveStringLength = this.stringLength - this.knotSize;
+            this.knotY = this.anchorY - Math.cos(combinedAngle) * effectiveStringLength;
             
-            // Calculate knot position - it's at the bottom of the balloon
-            // The knot position will include the tilt effect
-            const knotOffset = this.radius + this.knotSize * 0.5;
-            this.knotX = this.x + Math.sin(this.tiltAngle) * knotOffset;
-            this.knotY = this.y + Math.cos(this.tiltAngle) * knotOffset;
+            // Now update the tilt angle based on swing motion
+            this.tiltAngle = Math.sin(this.swingPhase + Math.PI / 2) * 0.1;
+            
+            // THEN calculate the balloon position based on the knot and tilt
+            // The balloon is attached to the knot (not the other way around)
+            const attachmentOffsetX = -Math.sin(this.tiltAngle) * (this.radius + this.knotSize * 0.5);
+            const attachmentOffsetY = -Math.cos(this.tiltAngle) * (this.radius + this.knotSize * 0.5);
+            
+            this.x = this.knotX + attachmentOffsetX;
+            this.y = this.knotY + attachmentOffsetY;
+            
+            // Update knot size based on balloon radius - ensures consistent transition
+            this.knotSize = Math.max(4, this.radius * 0.06);
             
             // Ensure balloon stays within canvas boundaries
             const boundaryMargin = this.radius * 1.2;
             const canvasWidth = canvas.width;
-            if (this.x < boundaryMargin) this.x = boundaryMargin;
-            if (this.x > canvasWidth - boundaryMargin) this.x = canvasWidth - boundaryMargin;
+            if (this.x < boundaryMargin) {
+                const diff = boundaryMargin - this.x;
+                this.x = boundaryMargin;
+                this.knotX += diff; // Move knot with balloon
+            }
+            if (this.x > canvasWidth - boundaryMargin) {
+                const diff = this.x - (canvasWidth - boundaryMargin);
+                this.x = canvasWidth - boundaryMargin;
+                this.knotX -= diff; // Move knot with balloon
+            }
             
             // Handle company name changes
             this.changeTimer -= deltaTime;
@@ -390,19 +458,19 @@ function initPlatformAnimation() {
                         this.fadeDirection = 2; // Start fading in
                         
                         // Remove current name from tracking
-                        displayedCompanies.delete(this.currentName);
+                        displayedCompanies.delete(this.currentCompanyData.name);
                         
-                        // Get new unique name
-                        this.nextName = getUniqueCompanyName();
+                        // Get new unique company data
+                        this.nextCompanyData = getUniqueCompanyData();
                         
                         // Split new name into lines
-                        this.nextLines = splitTextIntoLines(this.nextName, this.maxLineLength);
+                        this.nextLines = splitTextIntoLines(this.nextCompanyData.name, this.maxLineLength);
                         
                         // Calculate new balloon size based on the new name
-                        this.nextRadius = calculateBalloonRadius(this.nextName);
+                        this.nextRadius = calculateBalloonRadius(this.nextCompanyData.name);
                         
                         // Add new name to tracking
-                        displayedCompanies.add(this.nextName);
+                        displayedCompanies.add(this.nextCompanyData.name);
                     }
                 } else if (this.fadeDirection === 2) { // Fading in
                     this.textOpacity += deltaTime * 1.5; // Speed of fade
@@ -414,16 +482,23 @@ function initPlatformAnimation() {
                         this.textOpacity = 1;
                         this.fadeDirection = 0; // Done transitioning
                         this.isChangingName = false;
-                        this.currentName = this.nextName;
+                        this.currentCompanyData = this.nextCompanyData;
                         this.currentLines = this.nextLines;
                         this.radius = this.nextRadius; // Finalize radius change
+                        this.nextCompanyData = null; // Clear next data
                     }
                 }
             }
         }
         
         draw(ctx) {
-            // Save the current state
+            // Draw the string first - now the knot is part of the string
+            this.drawString(ctx);
+            
+            // Draw the knot at the end of the string
+            this.drawKnot(ctx);
+            
+            // Save the current state before drawing balloon
             ctx.save();
             
             // Move to balloon position
@@ -444,10 +519,18 @@ function initPlatformAnimation() {
                 0, 0, this.radius * 1.2
             );
             
-            gradient.addColorStop(0, '#ffffff'); // Bright highlight
-            gradient.addColorStop(0.3, '#fdfdfd');
-            gradient.addColorStop(0.7, '#f5f5f5');
-            gradient.addColorStop(1, '#f0f0f0'); // Edge
+            // Set gradient colors - slightly different if hovered
+            if (this.isHovered) {
+                gradient.addColorStop(0, '#ffffff'); // Bright highlight
+                gradient.addColorStop(0.3, '#fcfcfc');
+                gradient.addColorStop(0.7, '#f0f0f0');
+                gradient.addColorStop(1, '#e8e8e8'); // Slightly darker edge for hover effect
+            } else {
+                gradient.addColorStop(0, '#ffffff'); // Bright highlight
+                gradient.addColorStop(0.3, '#fdfdfd');
+                gradient.addColorStop(0.7, '#f5f5f5');
+                gradient.addColorStop(1, '#f0f0f0'); // Edge
+            }
             
             // Draw the balloon (slightly oval for more realistic shape)
             ctx.beginPath();
@@ -461,13 +544,156 @@ function initPlatformAnimation() {
             ctx.lineWidth = 0.5;
             ctx.stroke();
             
-            // Remove shadow for the knot and text
+            // Remove shadow for text and highlights
             ctx.shadowColor = 'transparent';
             
-            // Draw an improved balloon knot/tie at the bottom
-            const knotPosition = this.drawBalloonKnot(ctx);
+            // Draw the pinched bottom of the balloon (connects to the knot)
+            this.drawBalloonNeck(ctx);
             
-            // Save balloon state to return to after drawing text
+            // Draw the company name text
+            this.drawCompanyName(ctx);
+            
+            // Add balloon highlights for realism
+            this.drawBalloonHighlights(ctx);
+            
+            // If hovered, add a more obvious clickable indication
+            if (this.isHovered) {
+                // Draw subtle click indicator (circle around balloon)
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.radius + 8, this.radius * 1.05 + 8, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(201, 167, 75, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Add a small "click me" indicator
+                const clickMe = "cliquez";
+                ctx.fillStyle = "rgba(201, 167, 75, 0.9)";
+                ctx.font = "bold 14px 'Nobile', sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(clickMe, 0, this.radius * 0.6);
+            }
+            
+            // Restore canvas state
+            ctx.restore();
+        }
+        
+        // Draw the string from anchor point to knot
+        drawString(ctx) {
+            ctx.beginPath();
+            
+            // Start at the anchor point (bottom of string)
+            ctx.moveTo(this.anchorX, this.anchorY);
+            
+            // Draw a simple curved string to the knot center
+            // The control point makes the string curve naturally
+            const controlPointX = this.anchorX + (this.knotX - this.anchorX) * 0.5;
+            const controlPointY = this.anchorY - (this.anchorY - this.knotY) * 0.2;
+            
+            // Draw the curve to the knot position
+            ctx.quadraticCurveTo(controlPointX, controlPointY, this.knotX, this.knotY);
+            
+            // Style the string
+            ctx.strokeStyle = this.stringColor;
+            ctx.lineWidth = this.stringWidth;
+            ctx.stroke();
+        }
+        
+        // Draw the knot as a proper balloon tie/knot at the end of the string
+        drawKnot(ctx) {
+            // Save context for knot drawing
+            ctx.save();
+            
+            // Move to knot position
+            ctx.translate(this.knotX, this.knotY);
+            
+            // Draw the main knot circle (the tied part of balloon)
+            ctx.beginPath();
+            ctx.arc(0, 0, this.knotSize, 0, Math.PI * 2);
+            ctx.fillStyle = '#f0f0f0';
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 0.8;
+            ctx.fill();
+            ctx.stroke();
+            
+            // Add shadow crease across the knot for realism
+            ctx.beginPath();
+            ctx.arc(0, 0, this.knotSize * 0.6, Math.PI * 0.25, Math.PI * 1.25);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.07)';
+            ctx.lineWidth = this.knotSize * 0.4;
+            ctx.stroke();
+            
+            // Add highlight to knot for 3D effect
+            ctx.beginPath();
+            ctx.arc(-this.knotSize * 0.3, -this.knotSize * 0.2, this.knotSize * 0.3, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.fill();
+            
+            // Restore context
+            ctx.restore();
+        }
+        
+        // Draw the pinched neck of the balloon that connects to the knot
+        drawBalloonNeck(ctx) {
+            // Calculate the direction to the knot in balloon space
+            const knotDirX = (this.knotX - this.x) / this.radius;
+            const knotDirY = (this.knotY - this.y) / this.radius;
+            
+            // Normalize the direction
+            const length = Math.sqrt(knotDirX * knotDirX + knotDirY * knotDirY);
+            const normalizedDirX = knotDirX / length;
+            const normalizedDirY = knotDirY / length;
+            
+            // Calculate perpendicular direction for the width of the neck
+            const perpDirX = -normalizedDirY;
+            const perpDirY = normalizedDirX;
+            
+            // Draw a natural pinched bottom that points toward the knot
+            const neckWidth = this.radius * 0.35;
+            
+            // Create a natural looking pinched end of the balloon
+            ctx.beginPath();
+            
+            // Side 1 of pinch
+            ctx.moveTo(perpDirX * neckWidth, perpDirY * neckWidth);
+            ctx.quadraticCurveTo(
+                normalizedDirX * this.radius * 0.3,
+                normalizedDirY * this.radius * 0.3,
+                normalizedDirX * this.radius * 0.7,
+                normalizedDirY * this.radius * 0.7
+            );
+            
+            // Side 2 of pinch
+            ctx.quadraticCurveTo(
+                normalizedDirX * this.radius * 0.3,
+                normalizedDirY * this.radius * 0.3,
+                -perpDirX * neckWidth,
+                -perpDirY * neckWidth
+            );
+            
+            // Close the shape
+            ctx.closePath();
+            
+            // Fill with balloon color
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fill();
+            
+            // Add a slight crease for realism
+            ctx.beginPath();
+            ctx.moveTo(perpDirX * neckWidth * 0.5, perpDirY * neckWidth * 0.5);
+            ctx.quadraticCurveTo(
+                normalizedDirX * this.radius * 0.2,
+                normalizedDirY * this.radius * 0.2,
+                -perpDirX * neckWidth * 0.5,
+                -perpDirY * neckWidth * 0.5
+            );
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+        }
+        
+        // Method to draw the company name on the balloon
+        drawCompanyName(ctx) {
+            // Save current state
             ctx.save();
             
             // Determine which lines to display based on fade state
@@ -495,7 +721,12 @@ function initPlatformAnimation() {
             fontSize = Math.max(12, Math.min(fontSize, 24));
             
             // Draw company name with current opacity
-            ctx.fillStyle = `rgba(10, 30, 64, ${this.textOpacity})`;
+            // Use a slightly different color if hovered
+            const textColor = this.isHovered 
+                ? `rgba(10, 30, 64, ${this.textOpacity + 0.2})` 
+                : `rgba(10, 30, 64, ${this.textOpacity})`;
+                
+            ctx.fillStyle = textColor;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.font = `bold ${fontSize}px 'Nobile', sans-serif`;
@@ -511,11 +742,26 @@ function initPlatformAnimation() {
                 ctx.fillText(line, 0, lineY);
             });
             
-            // Restore balloon state
-            ctx.restore();
+            // If hovered, add underline effect to indicate clickability
+            if (this.isHovered) {
+                const lineY = startY + (numLines - 1) * lineHeight + fontSize * 0.8;
+                const lineWidth = Math.min(this.radius * 1.2, fontSize * displayLines[0].length * 0.6);
+                
+                ctx.beginPath();
+                ctx.moveTo(-lineWidth/2, lineY);
+                ctx.lineTo(lineWidth/2, lineY);
+                ctx.strokeStyle = textColor;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
             
-            // Add highlight effects for more realistic balloon appearance
-            // Main highlight
+            // Restore state
+            ctx.restore();
+        }
+        
+        // Method to draw balloon highlights for more realism
+        drawBalloonHighlights(ctx) {
+            // Main highlight (upper left)
             const highlightX = -this.radius * 0.3;
             const highlightY = -this.radius * 0.4;
             const highlightRadiusX = this.radius * 0.4;
@@ -526,7 +772,7 @@ function initPlatformAnimation() {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
             ctx.fill();
             
-            // Second smaller highlight for more dimension
+            // Second smaller highlight
             ctx.beginPath();
             ctx.ellipse(-this.radius * 0.1, -this.radius * 0.1, this.radius * 0.15, this.radius * 0.15, 0, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
@@ -537,86 +783,95 @@ function initPlatformAnimation() {
             ctx.ellipse(this.radius * 0.4, this.radius * 0.3, this.radius * 0.1, this.radius * 0.08, Math.PI/4, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             ctx.fill();
-            
-            // Restore to position before balloon drawing
-            ctx.restore();
-            
-            // Calculate the actual position of the knot in world coordinates
-            // This takes into account the balloon's position, tilt, and the knot's offset
-            const worldKnotX = this.x + Math.sin(this.tiltAngle) * (this.radius + this.knotSize * 0.5);
-            const worldKnotY = this.y + Math.cos(this.tiltAngle) * (this.radius + this.knotSize * 0.5);
-            
-            // Now draw the string from the anchor point to the knot position
-            // The string connects directly to the knot
-            ctx.beginPath();
-            ctx.moveTo(this.anchorX, this.anchorY);
-            
-            // Draw a curved string that connects to the knot position
-            // The control point creates a natural curve in the string
-            const controlPointX = this.anchorX + (worldKnotX - this.anchorX) * 0.5;
-            const controlPointY = this.anchorY - (this.anchorY - worldKnotY) * 0.2;
-            
-            ctx.quadraticCurveTo(controlPointX, controlPointY, worldKnotX, worldKnotY);
-            
-            // Style the string with gold color
-            ctx.strokeStyle = this.stringColor;
-            ctx.lineWidth = this.stringWidth;
-            ctx.stroke();
         }
         
-        // Method to draw a highly realistic balloon knot with improved details
-        drawBalloonKnot(ctx) {
-            const knotSize = this.knotSize;
+        // Check if a point is inside the balloon (for hovering)
+        checkHover(x, y) {
+            // Simple distance check
+            const dx = x - this.x;
+            const dy = y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
             
-            // Draw the pinched neck of the balloon
-            ctx.beginPath();
-            // Create a narrow neck that extends down from the balloon
-            ctx.moveTo(-knotSize * 1.5, this.radius - knotSize * 1.5);
-            ctx.quadraticCurveTo(0, this.radius - knotSize * 0.5, knotSize * 1.5, this.radius - knotSize * 1.5);
-            ctx.quadraticCurveTo(knotSize * 0.8, this.radius, 0, this.radius);
-            ctx.quadraticCurveTo(-knotSize * 0.8, this.radius, -knotSize * 1.5, this.radius - knotSize * 1.5);
+            // Update hover state
+            const wasHovered = this.isHovered;
+            this.isHovered = distance <= this.radius * 1.1; // Slightly larger hit area
             
-            ctx.fillStyle = '#f0f0f0';
-            ctx.fill();
+            return this.isHovered;
+        }
+        
+        // Check if a point is inside the balloon (for clicking)
+        isPointInside(x, y) {
+            // Simple distance check
+            const dx = x - this.x;
+            const dy = y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
             
-            // Add shadows to the pinched part
-            ctx.beginPath();
-            ctx.moveTo(-knotSize, this.radius - knotSize);
-            ctx.quadraticCurveTo(-knotSize * 0.5, this.radius - knotSize * 0.7, 0, this.radius - knotSize * 0.5);
-            ctx.quadraticCurveTo(knotSize * 0.5, this.radius - knotSize * 0.7, knotSize, this.radius - knotSize);
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+            return distance <= this.radius * 1.1; // Slightly larger hit area
+        }
+        
+        // Handle click on this balloon
+        handleClick() {
+            // If not clickable, ignore
+            if (!this.clickable) return;
             
-            // Draw the main knot (white balloon knot)
-            ctx.beginPath();
-            ctx.arc(0, this.radius + knotSize * 0.5, knotSize, 0, Math.PI * 2);
-            ctx.fillStyle = '#f0f0f0';
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
-            ctx.lineWidth = 0.8;
-            ctx.fill();
-            ctx.stroke();
+            // Find the platform card element
+            const platformElement = this.currentCompanyData.element;
             
-            // Add shadow to create depth in the knot
-            ctx.beginPath();
-            ctx.arc(0, this.radius + knotSize * 0.5, knotSize * 0.7, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fill();
-            
-            // Add highlight to knot for 3D effect
-            ctx.beginPath();
-            ctx.arc(-knotSize * 0.3, this.radius + knotSize * 0.2, knotSize * 0.3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.fill();
-            
-            // Calculate the actual position of the knot (for string attachment)
-            const knotPosition = {
-                x: 0,
-                y: this.radius + knotSize * 0.5
-            };
-            
-            // Return knot position for string attachment
-            return knotPosition;
+            if (platformElement) {
+                // If we have a reference to the card, scroll to it
+                platformElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Add a subtle highlight to the card
+                platformElement.classList.add('highlighted-card');
+                
+                // Remove the highlight after a moment
+                setTimeout(() => {
+                    platformElement.classList.remove('highlighted-card');
+                }, 2000);
+                
+                // Add expanded class if it exists
+                if (!platformElement.classList.contains('expanded')) {
+                    platformElement.classList.add('expanded');
+                    
+                    // Find and click the details button
+                    const detailsButton = platformElement.querySelector('.toggle-details');
+                    if (detailsButton) {
+                        // Simulate a click on the details button
+                        detailsButton.click();
+                    }
+                }
+            } else {
+                // If no element reference, try to find the card by name
+                const platformName = this.currentCompanyData.name.toUpperCase();
+                const platformCards = document.querySelectorAll('.platform-card');
+                
+                // Find the matching card (case insensitive)
+                for (const card of platformCards) {
+                    const titleElement = card.querySelector('.platform-title');
+                    if (titleElement && titleElement.textContent.trim().toUpperCase() === platformName) {
+                        // Scroll to the found card
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // Add a highlight
+                        card.classList.add('highlighted-card');
+                        setTimeout(() => {
+                            card.classList.remove('highlighted-card');
+                        }, 2000);
+                        
+                        // Open the card details
+                        if (!card.classList.contains('expanded')) {
+                            card.classList.add('expanded');
+                            
+                            // Find and click the details button
+                            const detailsButton = card.querySelector('.toggle-details');
+                            if (detailsButton) {
+                                detailsButton.click();
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
     
@@ -627,7 +882,7 @@ function initPlatformAnimation() {
     function animate(currentTime) {
         // Convert to seconds
         currentTime *= 0.001;
-        const deltaTime = currentTime - lastTime;
+        const deltaTime = Math.min(0.05, currentTime - lastTime); // Cap delta to prevent huge jumps
         lastTime = currentTime;
         
         // Clear the canvas
@@ -646,29 +901,35 @@ function initPlatformAnimation() {
     // Handle window resize
     window.addEventListener('resize', debounce(resizeCanvas, 250));
     
+    // Helper function for debouncing resize events
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+    
+    // Add CSS for highlighted cards
+    const style = document.createElement('style');
+    style.textContent = `
+        .highlighted-card {
+            animation: card-highlight 2s ease;
+            position: relative;
+            z-index: 100;
+        }
+        @keyframes card-highlight {
+            0%, 100% { box-shadow: var(--shadow-md); }
+            50% { box-shadow: 0 8px 30px rgba(201, 167, 75, 0.6); }
+        }
+    `;
+    document.head.appendChild(style);
+    
     // Initial setup
     resizeCanvas();
-    
-    // Apply fade effect to hero content on scroll
-    if (typeof applyHeroContentFade === 'function') {
-        applyHeroContentFade();
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Apply fade effect to hero content on scroll (simplified from parallax)
@@ -786,13 +1047,6 @@ function updateActiveNavLink() {
         }
     });
 }
-
-
-
-
-
-
-
 
 
 /**
