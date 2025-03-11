@@ -2545,6 +2545,11 @@ p {
     }
 }
 
+
+
+
+
+
 :root {
     /* Primary Colors - Inspirés des maillots Kappa */
     --color-primary: #0A1E40;     /* Bleu marine profond */
@@ -2615,3 +2620,457 @@ p {
     --z-popover: 1050;
     --z-tooltip: 1060;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+ * Mode sombre complet avec support des éléments générés par JavaScript
+ */
+
+/* Variables du mode sombre */
+:root {
+    /* Variables d'origine pour référence */
+    --original-color-primary: #0A1E40;
+    --original-color-secondary: #C9A74B;
+    --original-color-bg: #FAFAFA;
+    --original-color-white: #FFFFFF;
+    --original-color-text: #212121;
+    --original-color-text-secondary: #555555;
+    --original-color-border: #E0E0E0;
+    
+    /* Variables du mode sombre qui seront activées */
+    --dark-color-primary: #1A3A6A;
+    --dark-color-primary-light: #2A4D8F;
+    --dark-color-primary-dark: #0A1E40;
+    --dark-color-secondary: #E2B93B;
+    --dark-color-accent: #C9A74B;
+    --dark-color-bg: #121212;
+    --dark-color-card-bg: #1E1E1E;
+    --dark-color-card-bg-hover: #2A2A2A;
+    --dark-color-white: #1E1E1E;
+    --dark-color-black: #F5F5F5;
+    --dark-color-text: #E0E0E0;
+    --dark-color-text-secondary: #B0B0B0;
+    --dark-color-border: #333333;
+    --dark-gradient-card: linear-gradient(180deg, #1E1E1E 0%, #171717 100%);
+    --dark-gradient-primary: linear-gradient(135deg, var(--dark-color-primary), var(--dark-color-primary-light));
+    --dark-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --dark-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --dark-shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles du bouton de basculement du mode sombre/jour */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Styles spécifiques pour les modes jour/nuit */
+.theme-toggle svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+body.dark-mode .theme-toggle {
+    background-color: var(--dark-color-secondary);
+    color: var(--dark-color-primary-dark);
+}
+
+.theme-toggle .sun-icon,
+.theme-toggle .moon-icon {
+    position: absolute;
+    transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+body:not(.dark-mode) .theme-toggle .sun-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+
+body:not(.dark-mode) .theme-toggle .moon-icon {
+    opacity: 1;
+    transform: rotate(0);
+}
+
+body.dark-mode .theme-toggle .sun-icon {
+    opacity: 1;
+    transform: rotate(0);
+}
+
+body.dark-mode .theme-toggle .moon-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+/* Corps et structure globale */
+body.dark-mode {
+    background-color: var(--dark-color-bg);
+    color: var(--dark-color-text);
+}
+
+body.dark-mode .container,
+body.dark-mode section {
+    background-color: var(--dark-color-bg);
+}
+
+/* En-tête et navigation */
+body.dark-mode .header {
+    background-color: var(--dark-color-primary-dark);
+}
+
+body.dark-mode .header.scrolled {
+    background-color: var(--dark-color-primary);
+    box-shadow: var(--dark-shadow-md);
+}
+
+body.dark-mode .logo,
+body.dark-mode .nav-link {
+    color: #FFFFFF;
+}
+
+body.dark-mode .menu-toggle span {
+    background-color: #FFFFFF;
+}
+
+body.dark-mode .nav-list.active {
+    background-color: var(--dark-color-primary);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Sections spécifiques */
+body.dark-mode .hero {
+    background-color: var(--dark-color-primary-dark);
+}
+
+body.dark-mode .hero::before {
+    opacity: 0.15;
+}
+
+body.dark-mode .hero-title,
+body.dark-mode .hero-subtitle {
+    color: #FFFFFF;
+}
+
+body.dark-mode .about,
+body.dark-mode .categories,
+body.dark-mode .money,
+body.dark-mode .alternative {
+    background-color: var(--dark-color-bg);
+}
+
+body.dark-mode .p2p-info,
+body.dark-mode .sme-crowd,
+body.dark-mode .real-estate {
+    background-color: var(--dark-color-card-bg);
+}
+
+/* Titres et textes */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3,
+body.dark-mode h4, 
+body.dark-mode h5, 
+body.dark-mode h6,
+body.dark-mode .section-title {
+    color: #FFFFFF;
+}
+
+body.dark-mode .section-description {
+    color: var(--dark-color-text-secondary);
+}
+
+body.dark-mode p {
+    color: var(--dark-color-text);
+}
+
+body.dark-mode .section-title::after {
+    background: var(--dark-color-secondary);
+}
+
+/* Cartes et grilles */
+body.dark-mode .feature-card,
+body.dark-mode .category-card,
+body.dark-mode .platform-card {
+    background: var(--dark-gradient-card);
+    box-shadow: var(--dark-shadow-md);
+    border: 1px solid var(--dark-color-border);
+}
+
+body.dark-mode .feature-card:hover,
+body.dark-mode .category-card:hover,
+body.dark-mode .platform-card:hover {
+    background: var(--dark-color-card-bg-hover);
+    box-shadow: var(--dark-shadow-lg);
+}
+
+body.dark-mode .platform-card.expanded {
+    background: var(--dark-color-card-bg-hover);
+}
+
+body.dark-mode .platform-title {
+    color: #FFFFFF;
+}
+
+body.dark-mode .platform-description {
+    color: var(--dark-color-text);
+}
+
+body.dark-mode .platform-details {
+    border-top-color: var(--dark-color-border);
+}
+
+/* Bannières et badges */
+body.dark-mode .investment-tag {
+    background-color: rgba(51, 102, 204, 0.2);
+    color: #FFFFFF;
+}
+
+body.dark-mode .featured-badge {
+    background-color: var(--dark-color-secondary);
+    color: var(--dark-color-primary-dark);
+}
+
+body.dark-mode .month-badge {
+    background: var(--dark-gradient-primary);
+}
+
+/* Boutons et actions */
+body.dark-mode .btn-primary {
+    background: var(--dark-gradient-primary);
+    color: #FFFFFF;
+}
+
+body.dark-mode .btn-outline {
+    border-color: var(--dark-color-accent);
+    color: var(--dark-color-accent);
+}
+
+body.dark-mode .btn-outline:hover {
+    background-color: rgba(201, 167, 75, 0.1);
+    color: var(--dark-color-secondary);
+}
+
+body.dark-mode .hero .btn-primary {
+    background: var(--dark-color-secondary);
+    color: var(--dark-color-primary-dark);
+}
+
+body.dark-mode .hero .btn-outline {
+    border-color: var(--dark-color-secondary);
+    color: #FFFFFF;
+}
+
+body.dark-mode .hero .btn-outline:hover {
+    background: rgba(201, 167, 75, 0.2);
+}
+
+body.dark-mode .btn-accent {
+    background-color: var(--dark-color-accent);
+}
+
+/* Accordéons */
+body.dark-mode .accordion-item {
+    border-bottom-color: var(--dark-color-border);
+}
+
+body.dark-mode .accordion-trigger {
+    color: var(--dark-color-text);
+}
+
+body.dark-mode .accordion-trigger:hover {
+    color: var(--dark-color-secondary);
+}
+
+body.dark-mode .accordion-content {
+    color: var(--dark-color-text-secondary);
+}
+
+body.dark-mode .accordion-icon::before,
+body.dark-mode .accordion-icon::after {
+    background-color: var(--dark-color-secondary);
+}
+
+/* Offres et boîtes d'offres */
+body.dark-mode .offer-box {
+    background: linear-gradient(135deg, #2A4D8F, #4F73B8);
+}
+
+body.dark-mode .offer-title,
+body.dark-mode .offer-value {
+    color: #FFFFFF;
+}
+
+body.dark-mode .offer-benefits li {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Formulaire de recherche */
+body.dark-mode .search-section {
+    background-color: var(--dark-color-primary);
+}
+
+body.dark-mode .search-input {
+    background-color: rgba(30, 30, 30, 0.95);
+    color: var(--dark-color-text);
+    border-bottom-color: var(--dark-color-secondary);
+    box-shadow: var(--dark-shadow-md);
+}
+
+body.dark-mode .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .search-input:focus {
+    box-shadow: var(--dark-shadow-lg);
+}
+
+body.dark-mode .search-icon {
+    color: var(--dark-color-secondary);
+}
+
+body.dark-mode .search-notification {
+    background-color: var(--dark-color-primary-light);
+}
+
+body.dark-mode .search-empty {
+    background-color: var(--dark-color-primary-dark);
+}
+
+/* Autocomplete dans la recherche */
+body.dark-mode .autocomplete-container {
+    background-color: #1E1E1E;
+    border-top-color: rgba(201, 167, 75, 0.3);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode .autocomplete-suggestion {
+    color: #E0E0E0;
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .autocomplete-suggestion:hover,
+body.dark-mode .autocomplete-suggestion.selected {
+    background-color: rgba(201, 167, 75, 0.15);
+}
+
+body.dark-mode .autocomplete-suggestion strong {
+    color: var(--dark-color-secondary);
+}
+
+/* Footer */
+body.dark-mode .footer {
+    background-color: var(--dark-color-primary-dark);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .footer::before {
+    background-color: var(--dark-color-secondary);
+}
+
+body.dark-mode .footer-title {
+    color: var(--dark-color-secondary);
+}
+
+body.dark-mode .footer-title::after {
+    background-color: var(--dark-color-secondary);
+}
+
+body.dark-mode .footer-nav a {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .footer-nav a:hover {
+    color: #FFFFFF;
+}
+
+body.dark-mode .footer-nav a::before {
+    background-color: var(--dark-color-secondary);
+}
+
+body.dark-mode .footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .copyright {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Effets de mise en évidence */
+body.dark-mode .highlighted-card {
+    animation: dark-card-highlight 2s ease;
+}
+
+@keyframes dark-card-highlight {
+    0%, 100% { box-shadow: var(--dark-shadow-md); }
+    50% { box-shadow: 0 8px 30px rgba(201, 167, 75, 0.4); }
+}
+
+/* Animation des ballons */
+body.dark-mode .hero-image {
+    background-color: rgba(10, 30, 64, 0.3);
+}
+
+/* Stripe overlay effect */
+body.dark-mode .stripe-overlay.active {
+    opacity: 0.15;
+}
+
+/* Médias et images */
+body.dark-mode img.flag {
+    border-color: var(--dark-color-border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Autres ajustements */
+body.dark-mode .no-results {
+    background-color: rgba(201, 167, 75, 0.05);
+    color: var(--dark-color-text-secondary);
+}
+
+/* Style du préchargeur pour éviter un flash de mode clair en mode sombre */
+.theme-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #121212;
+    z-index: 9999;
+    display: none;
+}
+
+body.preload .theme-preloader {
+    display: block;
+}
+

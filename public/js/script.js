@@ -1669,3 +1669,400 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+
+
+
+
+
+
+/**
+ * Script de gestion du mode sombre avec prise en charge des éléments générés par JavaScript
+ * Adapte automatiquement les styles générés dynamiquement par JS
+ */
+(function() {
+    // Créer un préchargeur pour éviter le flash de contenu
+    const preloader = document.createElement('div');
+    preloader.className = 'theme-preloader';
+    document.body.appendChild(preloader);
+    document.body.classList.add('preload');
+
+    // Options pour le mode sombre
+    const darkModeSettings = {
+        // Couleurs de fond pour canvas et éléments générés
+        backgroundColor: '#121212',
+        textColor: '#E0E0E0',
+        primaryColor: '#1A3A6A',
+        secondaryColor: '#E2B93B',
+        accentColor: '#C9A74B',
+        
+        // Couleurs pour l'animation des ballons
+        balloonColors: {
+            fill: '#f0f0f0',
+            gradientStart: '#ffffff',
+            gradientEnd: '#e8e8e8',
+            shadow: 'rgba(0, 0, 0, 0.3)',
+            text: 'rgba(10, 30, 64, 0.9)',
+            string: 'rgba(201, 167, 75, 0.9)',
+            highlight: 'rgba(255, 255, 255, 0.7)'
+        }
+    };
+    
+    // Options pour le mode jour
+    const lightModeSettings = {
+        // Couleurs de fond pour canvas et éléments générés
+        backgroundColor: '#FAFAFA',
+        textColor: '#212121',
+        primaryColor: '#0A1E40',
+        secondaryColor: '#C9A74B',
+        accentColor: '#E2B93B',
+        
+        // Couleurs pour l'animation des ballons
+        balloonColors: {
+            fill: '#ffffff',
+            gradientStart: '#ffffff',
+            gradientEnd: '#f0f0f0',
+            shadow: 'rgba(0, 0, 0, 0.15)',
+            text: 'rgba(10, 30, 64, 1)',
+            string: 'rgba(201, 167, 75, 0.9)',
+            highlight: 'rgba(255, 255, 255, 0.7)'
+        }
+    };
+
+    // Créer le bouton de basculement du thème
+    function createThemeToggle() {
+        const themeToggle = document.createElement('button');
+        themeToggle.className = 'theme-toggle';
+        themeToggle.setAttribute('aria-label', 'Changer le thème');
+        themeToggle.innerHTML = `
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        `;
+        
+        // Ajouter le bouton au document
+        document.body.appendChild(themeToggle);
+        
+        // Gérer le clic sur le bouton
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.contains('dark-mode');
+            setThemePreference(!isDark);
+        });
+    }
+    
+    // Fonction principale pour gérer le thème
+    function setupThemeMode() {
+        // Créer le bouton de basculement
+        createThemeToggle();
+        
+        // Initialiser le thème
+        applyTheme();
+        
+        // Modifier les fonctions JavaScript qui génèrent des styles
+        patchJsFunctions();
+        
+        // Supprimer le préchargeur
+        setTimeout(() => {
+            document.body.classList.remove('preload');
+            preloader.style.display = 'none';
+        }, 200);
+        
+        // Écouter les changements de préférence système
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (localStorage.getItem('themeMode') === null) {
+                    applyTheme();
+                }
+            });
+        }
+    }
+    
+    // Enregistrer/obtenir la préférence de l'utilisateur
+    function setThemePreference(isDark) {
+        localStorage.setItem('themeMode', isDark ? 'dark' : 'light');
+        applyTheme();
+    }
+    
+    function getThemePreference() {
+        const savedTheme = localStorage.getItem('themeMode');
+        
+        if (savedTheme === 'dark') return true;
+        if (savedTheme === 'light') return false;
+        
+        // Aucune préférence sauvegardée, utiliser la préférence système
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    
+    // Appliquer le thème actuel
+    function applyTheme() {
+        const isDarkMode = getThemePreference();
+        
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            applyDarkModeToJsElements();
+        } else {
+            document.body.classList.remove('dark-mode');
+            applyLightModeToJsElements();
+        }
+    }
+    
+    // Fonctions pour modifier les styles des éléments créés par JS
+    function applyDarkModeToJsElements() {
+        // 1. Modifier l'animation des ballons si elle existe
+        adjustBalloonAnimation(true);
+        
+        // 2. Modifier les styles des éléments dynamiques
+        adjustDynamicElements(true);
+    }
+    
+    function applyLightModeToJsElements() {
+        // 1. Modifier l'animation des ballons pour le mode jour
+        adjustBalloonAnimation(false);
+        
+        // 2. Modifier les styles des éléments dynamiques
+        adjustDynamicElements(false);
+    }
+    
+    // Fonction pour ajuster l'animation des ballons
+    function adjustBalloonAnimation(isDark) {
+        // Si la fonction d'initialisation des ballons existe, nous la patchons
+        if (window.initPlatformAnimation) {
+            const originalFunction = window.initPlatformAnimation;
+            
+            // Remplacer la fonction d'animation par notre version modifiée
+            window.initPlatformAnimation = function() {
+                // Appliquer la fonction originale
+                const result = originalFunction.apply(this, arguments);
+                
+                // Ajuster les couleurs des ballons en fonction du mode
+                const colors = isDark ? darkModeSettings.balloonColors : lightModeSettings.balloonColors;
+                
+                // Sélectionner tous les canvas de l'animation
+                const canvases = document.querySelectorAll('.platform-animation');
+                canvases.forEach(canvas => {
+                    // Ajouter une classe pour le mode sombre
+                    if (isDark) {
+                        canvas.classList.add('dark-canvas');
+                    } else {
+                        canvas.classList.remove('dark-canvas');
+                    }
+                });
+                
+                return result;
+            };
+            
+            // Si l'animation est déjà initialisée, redémarrer
+            if (document.querySelector('.platform-animation')) {
+                try {
+                    window.initPlatformAnimation();
+                } catch (error) {
+                    console.warn('Could not reinitialize balloon animation:', error);
+                }
+            }
+        }
+    }
+    
+    // Fonction pour ajuster les éléments créés dynamiquement
+    function adjustDynamicElements(isDark) {
+        // Sélecteur MutationObserver pour surveiller les changements dans le DOM
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes.length) {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) { // Élément Node
+                            applyThemeToNode(node, isDark);
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Observer tout le body pour les changements
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        // Appliquer le thème aux éléments existants
+        document.querySelectorAll('*').forEach(node => {
+            applyThemeToNode(node, isDark);
+        });
+    }
+    
+    // Appliquer le thème à un nœud spécifique
+    function applyThemeToNode(node, isDark) {
+        // Vérifier si le nœud a un style
+        if (node.style) {
+            // Ajuster les couleurs de fond générées par JS
+            if (node.style.backgroundColor) {
+                if (isDefaultBackgroundColor(node.style.backgroundColor)) {
+                    node.style.backgroundColor = isDark ? darkModeSettings.backgroundColor : lightModeSettings.backgroundColor;
+                }
+            }
+            
+            // Ajuster les couleurs de texte générées par JS
+            if (node.style.color) {
+                if (isDefaultTextColor(node.style.color)) {
+                    node.style.color = isDark ? darkModeSettings.textColor : lightModeSettings.textColor;
+                }
+            }
+            
+            // Ajuster les ombres générées par JS
+            if (node.style.boxShadow) {
+                if (isDefaultShadow(node.style.boxShadow)) {
+                    node.style.boxShadow = isDark ? 
+                        'rgba(0, 0, 0, 0.4) 0px 4px 6px' : 
+                        'rgba(0, 0, 0, 0.1) 0px 4px 6px';
+                }
+            }
+        }
+        
+        // Vérifier les canvas pour l'animation des ballons
+        if (node.tagName === 'CANVAS' && node.className.includes('platform-animation')) {
+            if (isDark) {
+                node.classList.add('dark-canvas');
+            } else {
+                node.classList.remove('dark-canvas');
+            }
+        }
+    }
+    
+    // Fonctions pour vérifier les couleurs par défaut
+    function isDefaultBackgroundColor(color) {
+        return color === 'rgb(255, 255, 255)' || 
+               color === '#ffffff' || 
+               color === 'white' ||
+               color === 'rgb(250, 250, 250)' ||
+               color === '#fafafa';
+    }
+    
+    function isDefaultTextColor(color) {
+        return color === 'rgb(33, 33, 33)' || 
+               color === '#212121' || 
+               color === 'black';
+    }
+    
+    function isDefaultShadow(shadow) {
+        return shadow.includes('rgba(0, 0, 0, 0.1)') ||
+               shadow.includes('rgba(0, 0, 0, 0.05)');
+    }
+    
+    // Patch des fonctions JS qui génèrent des styles
+    function patchJsFunctions() {
+        // Patch pour l'animation des ballons
+        if (window.initPlatformAnimation) {
+            patchBalloonAnimation();
+        }
+        
+        // Patch pour la plateforme du mois
+        if (window.initRandomPlatformOfMonth) {
+            patchPlatformOfMonth();
+        }
+        
+        // Patch pour la recherche
+        if (window.initSearch) {
+            patchSearchFunction();
+        }
+    }
+    
+    // Patch pour l'animation des ballons
+    function patchBalloonAnimation() {
+        const originalFunc = window.initPlatformAnimation;
+        
+        window.initPlatformAnimation = function() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const colors = isDark ? darkModeSettings.balloonColors : lightModeSettings.balloonColors;
+            
+            // Stocker les couleurs dans une variable globale pour que la classe Balloon puisse y accéder
+            window.balloonColors = colors;
+            
+            // Exécuter la fonction originale
+            return originalFunc.apply(this, arguments);
+        };
+    }
+    
+    // Patch pour la plateforme du mois
+    function patchPlatformOfMonth() {
+        const originalFunc = window.initRandomPlatformOfMonth;
+        
+        window.initRandomPlatformOfMonth = function() {
+            const result = originalFunc.apply(this, arguments);
+            
+            // Ajuster les couleurs après que la plateforme du mois soit générée
+            const isDark = document.body.classList.contains('dark-mode');
+            const featuredPlatform = document.querySelector('.featured-platform');
+            
+            if (featuredPlatform && isDark) {
+                featuredPlatform.style.background = darkModeSettings.backgroundColor;
+                
+                // Sélectionner et ajuster les éléments à l'intérieur
+                const title = featuredPlatform.querySelector('.featured-platform-title');
+                const description = featuredPlatform.querySelector('.featured-platform-description');
+                
+                if (title) title.style.color = '#FFFFFF';
+                if (description) description.style.color = darkModeSettings.textColor;
+            }
+            
+            return result;
+        };
+    }
+    
+    // Patch pour la fonction de recherche
+    function patchSearchFunction() {
+        const originalFunc = window.initSearch;
+        
+        window.initSearch = function() {
+            const result = originalFunc.apply(this, arguments);
+            
+            // Ajuster les couleurs pour les résultats de recherche
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            if (isDark) {
+                const searchInput = document.querySelector('.search-input');
+                const searchResults = document.querySelector('.autocomplete-container');
+                
+                if (searchInput) {
+                    searchInput.style.backgroundColor = 'rgba(30, 30, 30, 0.95)';
+                    searchInput.style.color = darkModeSettings.textColor;
+                }
+                
+                if (searchResults) {
+                    searchResults.style.backgroundColor = darkModeSettings.backgroundColor;
+                    searchResults.style.borderColor = 'rgba(201, 167, 75, 0.3)';
+                    
+                    const suggestions = searchResults.querySelectorAll('.autocomplete-suggestion');
+                    suggestions.forEach(suggestion => {
+                        suggestion.style.color = darkModeSettings.textColor;
+                        suggestion.style.borderBottomColor = 'rgba(255, 255, 255, 0.05)';
+                    });
+                }
+            }
+            
+            return result;
+        };
+    }
+    
+    // Lancer la configuration au chargement du DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupThemeMode);
+    } else {
+        setupThemeMode();
+    }
+})();
+
+
+
+
+
+
